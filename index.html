@@ -1,0 +1,1301 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ôn tập từ vựng tiếng Anh</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+      }
+      .animate-pulse {
+        animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: .8;
+        }
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18.2.0",
+          "react-dom/client": "https://esm.sh/react-dom@18.2.0/client"
+        }
+      }
+    </script>
+  </head>
+  <body class="bg-sky-50 text-gray-800 antialiased">
+    <div id="root"></div>
+    <script type="module">
+      import React from 'react';
+      import ReactDOM from 'react-dom/client';
+
+      const { useState, useEffect, useMemo, useCallback, useRef } = React;
+
+      // Data from services/vocabulary.ts
+      const vocabularyData = [
+        {
+          title: "School – Trường học",
+          words: [
+            { english: "school", vietnamese: "Trường", englishExample: "My school is big.", vietnameseExample: "Trường của tôi rất lớn." },
+            { english: "classroom", vietnamese: "lớp học", englishExample: "There are twenty students in my classroom.", vietnameseExample: "Có 20 học sinh trong lớp học của tôi." },
+            { english: "teacher", vietnamese: "Cô giáo", englishExample: "My teacher is kind.", vietnameseExample: "Cô giáo của tôi rất tốt bụng." },
+            { english: "student", vietnamese: "học sinh", englishExample: "I am a student.", vietnameseExample: "Tôi là học sinh." },
+            { english: "book", vietnamese: "quyển sách", englishExample: "This is my book.", vietnameseExample: "Đây là quyển sách của tôi." },
+            { english: "ruler", vietnamese: "cây thước", englishExample: "I have a red ruler.", vietnameseExample: "Tôi có một cây thước đỏ." },
+            { english: "pen", vietnamese: "cây bút", englishExample: "Give me a pen, please.", vietnameseExample: "Làm ơn đưa tôi một cây bút." },
+            { english: "pencil", vietnamese: "bút chì", englishExample: "I draw with a pencil.", vietnameseExample: "Tôi vẽ bằng bút chì." },
+            { english: "bag", vietnamese: "Cặp sách", englishExample: "My school bag is new.", vietnameseExample: "Cặp sách của tôi mới." },
+            { english: "subject", vietnamese: "Môn học", englishExample: "My favourite subject is English.", vietnameseExample: "Môn học yêu thích của tôi là tiếng Anh." },
+            { english: "lesson", vietnamese: "tiết học", englishExample: "We have a Maths lesson today.", vietnameseExample: "Hôm nay chúng tôi có tiết Toán." },
+            { english: "desk", vietnamese: "cái bàn", englishExample: "There is a desk in my room.", vietnameseExample: "Có một cái bàn trong phòng tôi." },
+            { english: "board", vietnamese: "cái bảng", englishExample: "Look at the board, please.", vietnameseExample: "Làm ơn nhìn lên bảng." }
+          ]
+        },
+        {
+          title: "Family – Gia đình",
+          words: [
+            { english: "family", vietnamese: "Gia đình", englishExample: "My family is small.", vietnameseExample: "Gia đình tôi nhỏ." },
+            { english: "father", vietnamese: "Bố", englishExample: "My father is a doctor.", vietnameseExample: "Bố tôi là bác sĩ." },
+            { english: "mother", vietnamese: "Mẹ", englishExample: "My mother cooks dinner.", vietnameseExample: "Mẹ tôi nấu bữa tối." },
+            { english: "brother", vietnamese: "anh trai", englishExample: "I have one brother.", vietnameseExample: "Tôi có một anh trai." },
+            { english: "sister", vietnamese: "chị gái", englishExample: "She is my sister.", vietnameseExample: "Cô ấy là chị gái của tôi." },
+            { english: "grandfather", vietnamese: "Ông", englishExample: "My grandfather reads books every day.", vietnameseExample: "Ông tôi đọc sách mỗi ngày." },
+            { english: "grandmother", vietnamese: "Bà", englishExample: "My grandmother is very kind.", vietnameseExample: "Bà tôi rất tốt bụng." },
+            { english: "parents", vietnamese: "Bố mẹ", englishExample: "My parents love me.", vietnameseExample: "Bố mẹ tôi yêu tôi." }
+          ]
+        },
+        {
+            title: "Animals – Động vật",
+            words: [
+                { english: "dog", vietnamese: "Con chó", englishExample: "The dog is brown.", vietnameseExample: "Con chó có màu nâu." },
+                { english: "cat", vietnamese: "con mèo", englishExample: "I like my cat.", vietnameseExample: "Tôi thích con mèo của tôi." },
+                { english: "fish", vietnamese: "Con cá", englishExample: "The fish can swim.", vietnameseExample: "Con cá có thể bơi." },
+                { english: "bird", vietnamese: "Con chim", englishExample: "The bird can fly.", vietnameseExample: "Con chim có thể bay." },
+                { english: "lion", vietnamese: "Sư tử", englishExample: "The lion is strong.", vietnameseExample: "Sư tử thật mạnh mẽ." },
+                { english: "rabbit", vietnamese: "Con thỏ", englishExample: "The rabbit has long ears.", vietnameseExample: "Con thỏ có đôi tai dài." },
+                { english: "cow", vietnamese: "con bò", englishExample: "There are cows on the field.", vietnameseExample: "Có những con bò trên cánh đồng." },
+                { english: "crocodile", vietnamese: "Cá sấu", englishExample: "A crocodile can swim fast.", vietnameseExample: "Cá sấu có thể bơi nhanh." },
+                { english: "bear", vietnamese: "Con gấu", englishExample: "The bear is big.", vietnameseExample: "Con gấu thì to lớn." },
+                { english: "monkey", vietnamese: "Con khỉ", englishExample: "The monkey likes bananas.", vietnameseExample: "Con khỉ thích ăn chuối." }
+            ]
+        },
+        {
+            title: "Colours - Màu sắc",
+            words: [
+                { english: "red", vietnamese: "màu đỏ", englishExample: "This is a red crayon.", vietnameseExample: "Đây là bút sáp màu đỏ." },
+                { english: "blue", vietnamese: "màu xanh da trời", englishExample: "The sky is blue.", vietnameseExample: "Bầu trời có màu xanh." },
+                { english: "green", vietnamese: "màu xanh lá", englishExample: "I have a green kite.", vietnameseExample: "Tôi có một chiếc diều xanh." },
+                { english: "yellow", vietnamese: "màu vàng", englishExample: "That flower is yellow.", vietnameseExample: "Bông hoa đó màu vàng." },
+                { english: "pink", vietnamese: "màu hồng", englishExample: "The notebook is pink.", vietnameseExample: "Quyển vở màu hồng." },
+                { english: "brown", vietnamese: "màu nâu", englishExample: "The table is brown.", vietnameseExample: "Cái bàn màu nâu." },
+                { english: "black", vietnamese: "màu đen", englishExample: "My shoes are black.", vietnameseExample: "Giày của tôi màu đen." },
+                { english: "white", vietnamese: "màu trắng", englishExample: "His car is white.", vietnameseExample: "Xe của anh ấy màu trắng." },
+                { english: "orange", vietnamese: "màu cam", englishExample: "I like orange balloons.", vietnameseExample: "Tôi thích những quả bóng cam." },
+                { english: "purple", vietnamese: "màu tím", englishExample: "She has a purple bag.", vietnameseExample: "Cô ấy có một chiếc cặp tím." }
+            ]
+        },
+        {
+            title: "Actions – Hành động / Động từ thường",
+            words: [
+                { english: "play", vietnamese: "chơi", englishExample: "I play football.", vietnameseExample: "Tôi chơi bóng đá." },
+                { english: "read", vietnamese: "đọc", englishExample: "I read books every day.", vietnameseExample: "Tôi đọc sách mỗi ngày." },
+                { english: "write", vietnamese: "viết", englishExample: "I write a letter.", vietnameseExample: "Tôi viết một bức thư." },
+                { english: "draw", vietnamese: "vẽ", englishExample: "Let's draw a picture.", vietnameseExample: "Hãy vẽ một bức tranh." },
+                { english: "sing", vietnamese: "hát", englishExample: "She likes to sing songs.", vietnameseExample: "Cô ấy thích hát." },
+                { english: "dance", vietnamese: "nhảy", englishExample: "They can dance well.", vietnameseExample: "Họ có thể nhảy giỏi." },
+                { english: "listen", vietnamese: "lắng nghe", englishExample: "Listen to the teacher.", vietnameseExample: "Hãy lắng nghe cô giáo." },
+                { english: "speak", vietnamese: "nói", englishExample: "Can you speak English?", vietnameseExample: "Bạn có thể nói tiếng Anh không?" },
+                { english: "clean", vietnamese: "dọn dẹp", englishExample: "I clean my room.", vietnameseExample: "Tôi dọn phòng của tôi." },
+                { english: "study", vietnamese: "học", englishExample: "We study at school.", vietnameseExample: "Chúng tôi học ở trường." }
+            ]
+        },
+        {
+            title: "Food & Drinks – Thức ăn và đồ uống",
+            words: [
+                { english: "food", vietnamese: "món ăn", englishExample: "I like Vietnamese food.", vietnameseExample: "Tôi thích món ăn Việt Nam." },
+                { english: "drink", vietnamese: "đồ uống", englishExample: "Lemonade is my favourite drink.", vietnameseExample: "Nước chanh là đồ uống yêu thích của tôi." },
+                { english: "rice", vietnamese: "cơm", englishExample: "We eat rice every day.", vietnameseExample: "Chúng tôi ăn cơm mỗi ngày." },
+                { english: "bread", vietnamese: "bánh mì", englishExample: "I eat bread for breakfast.", vietnameseExample: "Tôi ăn bánh mì vào bữa sáng." },
+                { english: "milk", vietnamese: "sữa", englishExample: "I drink milk every morning.", vietnameseExample: "Tôi uống sữa mỗi sáng." },
+                { english: "water", vietnamese: "nước", englishExample: "Drink water, please.", vietnameseExample: "Làm ơn uống nước đi." },
+                { english: "cake", vietnamese: "bánh", englishExample: "Happy birthday! Here is your cake.", vietnameseExample: "Chúc mừng sinh nhật! Đây là bánh của bạn." },
+                { english: "candy", vietnamese: "kẹo", englishExample: "I'd like a candy.", vietnameseExample: "Tôi muốn một viên kẹo." },
+                { english: "apple", vietnamese: "quả táo", englishExample: "I have an apple.", vietnameseExample: "Tôi có một quả táo." },
+                { english: "banana", vietnamese: "Quả chuối", englishExample: "The banana is yellow.", vietnameseExample: "Quả chuối có màu vàng." },
+                { english: "fish", vietnamese: "cá", englishExample: "I like fried fish.", vietnameseExample: "Tôi thích cá chiên." },
+                { english: "chicken", vietnamese: "thịt gà", englishExample: "We eat chicken for lunch.", vietnameseExample: "Chúng tôi ăn thịt gà vào bữa trưa." },
+                { english: "juice", vietnamese: "nước ép", englishExample: "I like orange juice.", vietnameseExample: "Tôi thích nước cam." },
+                { english: "noodles", vietnamese: "mì", englishExample: "He eats noodles for breakfast.", vietnameseExample: "Cậu ấy ăn mì vào bữa sáng." }
+            ]
+        },
+        {
+            title: "Weather – Thời tiết",
+            words: [
+                { english: "weather", vietnamese: "Thời tiết", englishExample: "How's the weather today?", vietnameseExample: "Thời tiết hôm nay thế nào?" },
+                { english: "sunny", vietnamese: "trời nắng", englishExample: "It's sunny today.", vietnameseExample: "Hôm nay trời nắng." },
+                { english: "rainy", vietnamese: "có mưa", englishExample: "It's rainy in Hanoi today.", vietnameseExample: "Hôm nay Hà Nội có mưa." },
+                { english: "cloudy", vietnamese: "nhiều mây", englishExample: "It's cloudy this morning.", vietnameseExample: "Sáng nay trời nhiều mây." },
+                { english: "windy", vietnamese: "có gió", englishExample: "It's windy outside.", vietnameseExample: "Bên ngoài trời có gió." },
+                { english: "hot", vietnamese: "nóng", englishExample: "It's very hot today.", vietnameseExample: "Hôm nay rất nóng." },
+                { english: "cold", vietnamese: "lạnh", englishExample: "It's cold in winter.", vietnameseExample: "Trời lạnh vào mùa đông." },
+                { english: "cool", vietnamese: "mát mẻ", englishExample: "It's cool in the evening.", vietnameseExample: "Buổi tối trời mát." }
+            ]
+        },
+        {
+            title: "Numbers & Time – Số đếm và thời gian",
+            words: [
+                { english: "one", vietnamese: "một", englishExample: "I have one ruler.", vietnameseExample: "Tôi có một cây thước." },
+                { english: "two", vietnamese: "hai", englishExample: "There are two cats.", vietnameseExample: "Có hai con mèo." },
+                { english: "three", vietnamese: "ba", englishExample: "She has three dolls.", vietnameseExample: "Cô ấy có ba con búp bê." },
+                { english: "ten", vietnamese: "mười", englishExample: "I'm ten years old.", vietnameseExample: "Tôi 10 tuổi." },
+                { english: "twenty", vietnamese: "hai mươi", englishExample: "There are twenty students.", vietnameseExample: "Có hai mươi học sinh." },
+                { english: "first", vietnamese: "thứ nhất", englishExample: "My birthday is on the first of July.", vietnameseExample: "Sinh nhật của tôi là ngày 1 tháng 7." },
+                { english: "second", vietnamese: "thứ hai", englishExample: "This is my second pencil.", vietnameseExample: "Đây là cây bút thứ hai của tôi." },
+                { english: "time", vietnamese: "giờ", englishExample: "What time is it?", vietnameseExample: "Mấy giờ rồi?" },
+                { english: "morning", vietnamese: "buổi sáng", englishExample: "Good morning, teacher!", vietnameseExample: "Chào buổi sáng, cô giáo!" },
+                { english: "afternoon", vietnamese: "buổi chiều", englishExample: "We play football in the afternoon.", vietnameseExample: "Chúng tôi chơi bóng đá vào buổi chiều." },
+                { english: "evening", vietnamese: "buổi tối", englishExample: "I do my homework in the evening.", vietnameseExample: "Tôi làm bài tập vào buổi tối." },
+                { english: "night", vietnamese: "ban đêm", englishExample: "Good night, Mom!", vietnameseExample: "Chúc ngủ ngon, mẹ!" }
+            ]
+        },
+        {
+            title: "Body Parts – Bộ phận cơ thể",
+            words: [
+                { english: "head", vietnamese: "đầu", englishExample: "I have a headache.", vietnameseExample: "Tôi bị đau đầu." },
+                { english: "eyes", vietnamese: "mắt", englishExample: "I have two eyes.", vietnameseExample: "Tôi có hai con mắt." },
+                { english: "ears", vietnamese: "tai", englishExample: "Spiders hear by using hairs on their legs.", vietnameseExample: "Nhện nghe bằng lông trên chân." },
+                { english: "nose", vietnamese: "mũi", englishExample: "I smell flowers with my nose.", vietnameseExample: "Tôi ngửi hoa bằng mũi." },
+                { english: "mouth", vietnamese: "miệng", englishExample: "I talk with my mouth.", vietnameseExample: "Tôi nói bằng miệng." },
+                { english: "hand", vietnamese: "bàn tay", englishExample: "Wash your hands, please.", vietnameseExample: "Làm ơn rửa tay nhé." },
+                { english: "leg", vietnamese: "chân", englishExample: "The boy hurts his leg.", vietnameseExample: "Cậu bé bị đau chân." },
+                { english: "foot", vietnamese: "bàn chân", englishExample: "My foot is small.", vietnameseExample: "Bàn chân của tôi nhỏ." },
+                { english: "hair", vietnamese: "tóc", englishExample: "She has long hair.", vietnameseExample: "Cô ấy có mái tóc dài." },
+                { english: "face", vietnamese: "mặt", englishExample: "Wash your face every morning.", vietnameseExample: "Rửa mặt mỗi buổi sáng." }
+            ]
+        },
+        {
+            title: "Daily Activities – Hoạt động hằng ngày",
+            words: [
+                { english: "get up", vietnamese: "thức dậy", englishExample: "I get up at six o'clock.", vietnameseExample: "Tôi thức dậy lúc sáu giờ." },
+                { english: "go to school", vietnamese: "đi học", englishExample: "I go to school by bike.", vietnameseExample: "Tôi đi học bằng xe đạp." },
+                { english: "have breakfast", vietnamese: "ăn sáng", englishExample: "I have breakfast at seven.", vietnameseExample: "Tôi ăn sáng lúc bảy giờ." },
+                { english: "brush teeth", vietnamese: "đánh răng", englishExample: "I brush my teeth in the morning.", vietnameseExample: "Tôi đánh răng vào buổi sáng." },
+                { english: "do homework", vietnamese: "làm bài tập", englishExample: "I do my homework every evening.", vietnameseExample: "Tôi làm bài tập mỗi buổi tối." },
+                { english: "play games", vietnamese: "chơi trò chơi", englishExample: "I play games with my friends.", vietnameseExample: "Tôi chơi trò chơi với bạn." },
+                { english: "watch TV", vietnamese: "xem tivi", englishExample: "We watch TV after dinner.", vietnameseExample: "Chúng tôi xem tivi sau bữa tối." },
+                { english: "read books", vietnamese: "đọc sách", englishExample: "He reads books before bed.", vietnameseExample: "Cậu ấy đọc sách trước khi ngủ." },
+                { english: "sleep", vietnamese: "đi ngủ", englishExample: "I sleep at ten o'clock.", vietnameseExample: "Tôi đi ngủ lúc mười giờ." },
+                { english: "take a bath", vietnamese: "tắm", englishExample: "She takes a bath at night.", vietnameseExample: "Cô ấy tắm vào buổi tối." }
+            ]
+        },
+        {
+            title: "Places – Địa điểm",
+            words: [
+                { english: "school", vietnamese: "Trường", englishExample: "My school is near my house.", vietnameseExample: "Trường của tôi ở gần nhà." },
+                { english: "classroom", vietnamese: "lớp học", englishExample: "We study in the classroom.", vietnameseExample: "Chúng tôi học trong lớp học." },
+                { english: "playground", vietnamese: "sân chơi", englishExample: "They play in the playground.", vietnameseExample: "Họ chơi trong sân trường." },
+                { english: "park", vietnamese: "công viên", englishExample: "Let's go to the park.", vietnameseExample: "Hãy đi công viên nào." },
+                { english: "zoo", vietnamese: "sở thú", englishExample: "I see lions at the zoo.", vietnameseExample: "Tôi nhìn thấy sư tử ở sở thú." },
+                { english: "library", vietnamese: "thư viện", englishExample: "We read books in the library.", vietnameseExample: "Chúng tôi đọc sách trong thư viện." },
+                { english: "hospital", vietnamese: "bệnh viện", englishExample: "My father works in a hospital.", vietnameseExample: "Bố tôi làm việc trong bệnh viện." },
+                { english: "post office", vietnamese: "bưu điện", englishExample: "I send a letter at the post office.", vietnameseExample: "Tôi gửi thư ở bưu điện." },
+                { english: "bank", vietnamese: "Ngân hàng", englishExample: "The bank is next to the bakery.", vietnameseExample: "Ngân hàng ở cạnh tiệm bánh." },
+                { english: "supermarket", vietnamese: "siêu thị", englishExample: "My mother buys food at the supermarket.", vietnameseExample: "Mẹ tôi mua thức ăn ở siêu thị." }
+            ]
+        },
+        {
+            title: "Clothes – Quần áo",
+            words: [
+                { english: "shirt", vietnamese: "áo sơ mi", englishExample: "He wears a white shirt.", vietnameseExample: "Cậu ấy mặc áo sơ mi trắng." },
+                { english: "dress", vietnamese: "váy", englishExample: "My mother wears a blue dress.", vietnameseExample: "Mẹ tôi mặc váy màu xanh." },
+                { english: "trousers", vietnamese: "quần", englishExample: "My trousers are black.", vietnameseExample: "Quần của tôi màu đen." },
+                { english: "skirt", vietnamese: "váy ngắn", englishExample: "She likes wearing a pink skirt.", vietnameseExample: "Cô ấy thích mặc váy hồng." },
+                { english: "shoes", vietnamese: "giày", englishExample: "I have new shoes.", vietnameseExample: "Tôi có đôi giày mới." },
+                { english: "socks", vietnamese: "tất", englishExample: "I put on my socks.", vietnameseExample: "Tôi mang tất vào." },
+                { english: "hat", vietnamese: "mũ", englishExample: "This hat is very nice.", vietnameseExample: "Cái mũ này rất đẹp." },
+                { english: "coat", vietnamese: "áo khoác", englishExample: "I wear a coat in winter.", vietnameseExample: "Tôi mặc áo khoác vào mùa đông." },
+                { english: "T-shirt", vietnamese: "áo thun", englishExample: "I wear a T-shirt at home.", vietnameseExample: "Tôi mặc áo thun ở nhà." },
+                { english: "uniform", vietnamese: "đồng phục", englishExample: "I wear my school uniform.", vietnameseExample: "Tôi mặc đồng phục của trường." }
+            ]
+        },
+        {
+            title: "Feelings – Cảm xúc",
+            words: [
+                { english: "happy", vietnamese: "vui", englishExample: "I am happy today.", vietnameseExample: "Hôm nay tôi vui." },
+                { english: "sad", vietnamese: "buồn", englishExample: "She is sad now.", vietnameseExample: "Cô ấy đang buồn." },
+                { english: "angry", vietnamese: "giận", englishExample: "He is angry with his friend.", vietnameseExample: "Cậu ấy đang giận bạn." },
+                { english: "tired", vietnamese: "mệt", englishExample: "I'm tired after school.", vietnameseExample: "Tôi mệt sau giờ học." },
+                { english: "hungry", vietnamese: "đói", englishExample: "I'm hungry. Let's eat.", vietnameseExample: "Tôi đói rồi. Ăn thôi nào." },
+                { english: "thirsty", vietnamese: "khát", englishExample: "I'm thirsty. I need some water.", vietnameseExample: "Tôi khát. Tôi cần uống nước." },
+                { english: "scared", vietnamese: "sợ hãi", englishExample: "The little boy is scared.", vietnameseExample: "Cậu bé nhỏ sợ hãi." },
+                { english: "surprised", vietnamese: "ngạc nhiên", englishExample: "I'm surprised to see you!", vietnameseExample: "Tôi ngạc nhiên khi gặp bạn!" }
+            ]
+        },
+        {
+            title: "Holidays – Ngày lễ / Sự kiện",
+            words: [
+                { english: "birthday", vietnamese: "Sinh nhật", englishExample: "My birthday is in May.", vietnameseExample: "Sinh nhật của tôi vào tháng Năm." },
+                { english: "Christmas", vietnamese: "Giáng sinh", englishExample: "We get gifts at Christmas.", vietnameseExample: "Chúng tôi nhận quà vào dịp Giáng sinh." },
+                { english: "New Year", vietnamese: "năm mới", englishExample: "Happy New Year!", vietnameseExample: "Chúc mừng năm mới!" },
+                { english: "Tet holiday", vietnamese: "Tết", englishExample: "Tet is a big festival in Vietnam.", vietnameseExample: "Tết là lễ lớn ở Việt Nam." },
+                { english: "holiday", vietnamese: "kỳ nghỉ", englishExample: "I visit my grandparents on holiday.", vietnameseExample: "Tôi thăm ông bà vào kỳ nghỉ." },
+                { english: "present", vietnamese: "quà", englishExample: "I have a birthday present for you.", vietnameseExample: "Tôi có quà sinh nhật cho bạn." },
+                { english: "cake", vietnamese: "bánh", englishExample: "The cake is for you.", vietnameseExample: "Cái bánh này dành cho bạn." },
+                { english: "party", vietnamese: "bữa tiệc", englishExample: "We have a big party today.", vietnameseExample: "Hôm nay chúng tôi có một bữa tiệc lớn." },
+                { english: "gift", vietnamese: "quà tặng", englishExample: "I get many gifts on my birthday.", vietnameseExample: "Tôi nhận được nhiều quà vào sinh nhật." },
+                { english: "card", vietnamese: "thiệp", englishExample: "I make a card for my friend.", vietnameseExample: "Tôi làm thiệp tặng bạn." }
+            ]
+        },
+        {
+            title: "Transport – Phương tiện giao thông",
+            words: [
+                { english: "car", vietnamese: "xe hơi", englishExample: "My father drives a car.", vietnameseExample: "Bố tôi lái xe hơi." },
+                { english: "bus", vietnamese: "xe buýt", englishExample: "We go to school by bus.", vietnameseExample: "Chúng tôi đi học bằng xe buýt." },
+                { english: "bike", vietnamese: "xe đạp", englishExample: "I ride my bike to school.", vietnameseExample: "Tôi đạp xe đến trường." },
+                { english: "motorbike", vietnamese: "xe máy", englishExample: "My mother goes to work by motorbike.", vietnameseExample: "Mẹ tôi đi làm bằng xe máy." },
+                { english: "train", vietnamese: "Tàu hỏa", englishExample: "The train is very fast.", vietnameseExample: "Tàu hỏa rất nhanh." },
+                { english: "plane", vietnamese: "máy bay", englishExample: "We travel by plane.", vietnameseExample: "Chúng tôi đi du lịch bằng máy bay." },
+                { english: "boat", vietnamese: "thuyền", englishExample: "The boys are on the boat.", vietnameseExample: "Những cậu bé đang ở trên thuyền." },
+                { english: "taxi", vietnamese: "taxi", englishExample: "We take a taxi to the station.", vietnameseExample: "Chúng tôi đi taxi đến ga." },
+                { english: "truck", vietnamese: "Xe tải", englishExample: "The truck carries fruit.", vietnameseExample: "Xe tải chở trái cây." },
+                { english: "ship", vietnamese: "Con tàu", englishExample: "The big ship is on the sea.", vietnameseExample: "Con tàu lớn ở trên biển." }
+            ]
+        },
+        {
+            title: "Jobs – Nghề nghiệp",
+            words: [
+                { english: "teacher", vietnamese: "Cô giáo", englishExample: "My teacher is very nice.", vietnameseExample: "Cô giáo của tôi rất dễ thương." },
+                { english: "doctor", vietnamese: "bác sĩ", englishExample: "My father is a doctor.", vietnameseExample: "Bố tôi là bác sĩ." },
+                { english: "nurse", vietnamese: "Y tá", englishExample: "The nurse helps sick people.", vietnameseExample: "Y tá giúp đỡ người bệnh." },
+                { english: "farmer", vietnamese: "nông dân", englishExample: "My uncle is a farmer.", vietnameseExample: "Chú tôi là nông dân." },
+                { english: "worker", vietnamese: "công nhân", englishExample: "My mother is a factory worker.", vietnameseExample: "Mẹ tôi là công nhân nhà máy." },
+                { english: "driver", vietnamese: "tài xế", englishExample: "My father is a bus driver.", vietnameseExample: "Bố tôi là tài xế xe buýt." },
+                { english: "cook", vietnamese: "đầu bếp", englishExample: "My aunt is a cook.", vietnameseExample: "Cô tôi là đầu bếp." },
+                { english: "student", vietnamese: "học sinh", englishExample: "I am a student.", vietnameseExample: "Tôi là học sinh." },
+                { english: "singer", vietnamese: "ca sĩ", englishExample: "She is a good singer.", vietnameseExample: "Cô ấy là ca sĩ giỏi." },
+                { english: "police officer", vietnamese: "cảnh sát", englishExample: "The police officer is very brave.", vietnameseExample: "Chú cảnh sát rất dũng cảm." }
+            ]
+        },
+        {
+            title: "Hobbies – Sở thích",
+            words: [
+                { english: "hobby", vietnamese: "Sở thích", englishExample: "My hobby is drawing.", vietnameseExample: "Sở thích của tôi là vẽ." },
+                { english: "play football", vietnamese: "chơi bóng đá", englishExample: "I play football with my friends.", vietnameseExample: "Tôi chơi bóng đá với bạn bè." },
+                { english: "play badminton", vietnamese: "chơi cầu lông", englishExample: "We play badminton after school.", vietnameseExample: "Chúng tôi chơi cầu lông sau giờ học." },
+                { english: "read books", vietnamese: "đọc sách", englishExample: "I like reading books.", vietnameseExample: "Tôi thích đọc sách." },
+                { english: "listen to music", vietnamese: "nghe nhạc", englishExample: "She listens to music every day.", vietnameseExample: "Cô ấy nghe nhạc mỗi ngày." },
+                { english: "draw pictures", vietnamese: "vẽ tranh", englishExample: "He draws pictures very well.", vietnameseExample: "Cậu ấy vẽ tranh rất đẹp." },
+                { english: "sing songs", vietnamese: "hát", englishExample: "I like singing songs.", vietnameseExample: "Tôi thích hát." },
+                { english: "dance", vietnamese: "nhảy múa", englishExample: "They dance happily.", vietnameseExample: "Họ nhảy múa vui vẻ." },
+                { english: "collect stamps", vietnamese: "sưu tập tem", englishExample: "I collect stamps.", vietnameseExample: "Tôi sưu tập tem." },
+                { english: "watch cartoons", vietnamese: "xem phim hoạt hình", englishExample: "I watch cartoons on TV.", vietnameseExample: "Tôi xem phim hoạt hình trên TV." }
+            ]
+        },
+        {
+            title: "House & Rooms – Ngôi nhà và các phòng",
+            words: [
+                { english: "house", vietnamese: "Nhà", englishExample: "My house is big.", vietnameseExample: "Nhà của tôi lớn." },
+                { english: "room", vietnamese: "Phòng", englishExample: "My room is small.", vietnameseExample: "Phòng của tôi nhỏ." },
+                { english: "living room", vietnamese: "phòng khách", englishExample: "We watch TV in the living room.", vietnameseExample: "Chúng tôi xem TV trong phòng khách." },
+                { english: "bedroom", vietnamese: "phòng ngủ", englishExample: "I sleep in my bedroom.", vietnameseExample: "Tôi ngủ trong phòng ngủ." },
+                { english: "kitchen", vietnamese: "bếp", englishExample: "My mother cooks in the kitchen.", vietnameseExample: "Mẹ tôi nấu ăn trong bếp." },
+                { english: "bathroom", vietnamese: "phòng tắm", englishExample: "I brush my teeth in the bathroom.", vietnameseExample: "Tôi đánh răng trong phòng tắm." },
+                { english: "garden", vietnamese: "vườn", englishExample: "There are flowers in the garden.", vietnameseExample: "Có hoa trong vườn." },
+                { english: "window", vietnamese: "cửa sổ", englishExample: "Open the window, please.", vietnameseExample: "Làm ơn mở cửa sổ." },
+                { english: "door", vietnamese: "cửa", englishExample: "Close the door, please.", vietnameseExample: "Làm ơn đóng cửa." },
+                { english: "floor", vietnamese: "tầng", englishExample: "My classroom is on the first floor.", vietnameseExample: "Lớp học của tôi ở tầng một." }
+            ]
+        },
+        {
+            title: "Animals 2 – Wild & Farm Animals",
+            words: [
+                { english: "elephant", vietnamese: "Con voi", englishExample: "The elephant is very big.", vietnameseExample: "Con voi rất to." },
+                { english: "tiger", vietnamese: "Con hổ", englishExample: "The tiger is strong.", vietnameseExample: "Con hổ rất mạnh." },
+                { english: "monkey", vietnamese: "Con khỉ", englishExample: "The monkey climbs the tree.", vietnameseExample: "Con khỉ leo cây." },
+                { english: "bird", vietnamese: "Con chim", englishExample: "The bird can fly.", vietnameseExample: "Con chim có thể bay." },
+                { english: "duck", vietnamese: "Con vịt", englishExample: "The duck swims in the pond.", vietnameseExample: "Con vịt bơi trong ao." },
+                { english: "cow", vietnamese: "Con bò", englishExample: "The cow gives us milk.", vietnameseExample: "Con bò cho chúng ta sữa." },
+                { english: "pig", vietnamese: "Con heo", englishExample: "The pig is pink.", vietnameseExample: "Con heo có màu hồng." },
+                { english: "horse", vietnamese: "Con ngựa", englishExample: "The horse runs fast.", vietnameseExample: "Con ngựa chạy nhanh." },
+                { english: "sheep", vietnamese: "con cừu", englishExample: "There are many sheep on the farm.", vietnameseExample: "Có nhiều con cừu trong nông trại." },
+                { english: "goat", vietnamese: "Con dê", englishExample: "The goat eats grass.", vietnameseExample: "Con dê ăn cỏ." }
+            ]
+        },
+        {
+            title: "Nature & Environment – Thiên nhiên và môi trường",
+            words: [
+                { english: "tree", vietnamese: "cái cây", englishExample: "There is a big tree in the garden.", vietnameseExample: "Có một cái cây lớn trong vườn." },
+                { english: "flower", vietnamese: "hoa", englishExample: "I like red flowers.", vietnameseExample: "Tôi thích hoa đỏ." },
+                { english: "river", vietnamese: "Dòng sông", englishExample: "The river is long.", vietnameseExample: "Dòng sông dài." },
+                { english: "mountain", vietnamese: "Ngọn núi", englishExample: "The mountain is high.", vietnameseExample: "Ngọn núi cao." },
+                { english: "sky", vietnamese: "Bầu trời", englishExample: "The sky is blue.", vietnameseExample: "Bầu trời có màu xanh." },
+                { english: "sun", vietnamese: "Mặt trời", englishExample: "The sun is shining.", vietnameseExample: "Mặt trời đang chiếu sáng." },
+                { english: "rain", vietnamese: "mưa", englishExample: "It's raining now.", vietnameseExample: "Trời đang mưa." },
+                { english: "wind", vietnamese: "Gió", englishExample: "The wind is strong.", vietnameseExample: "Gió thổi mạnh." },
+                { english: "cloud", vietnamese: "đám mây", englishExample: "There are white clouds.", vietnameseExample: "Có những đám mây trắng." },
+                { english: "sea", vietnamese: "biển", englishExample: "We swim in the sea.", vietnameseExample: "Chúng tôi bơi ở biển." }
+            ]
+        },
+        {
+            title: "Sports – Thể thao",
+            words: [
+                { english: "football", vietnamese: "bóng đá", englishExample: "I play football after school.", vietnameseExample: "Tôi chơi bóng đá sau giờ học." },
+                { english: "badminton", vietnamese: "cầu lông", englishExample: "She plays badminton on Sundays.", vietnameseExample: "Cô ấy chơi cầu lông vào Chủ nhật." },
+                { english: "basketball", vietnamese: "bóng rổ", englishExample: "We play basketball in the yard.", vietnameseExample: "Chúng tôi chơi bóng rổ ở sân trường." },
+                { english: "volleyball", vietnamese: "bóng chuyền", englishExample: "They play volleyball together.", vietnameseExample: "Họ chơi bóng chuyền cùng nhau." },
+                { english: "swimming", vietnamese: "bơi", englishExample: "I like swimming in summer.", vietnameseExample: "Tôi thích bơi vào mùa hè." },
+                { english: "running", vietnamese: "chạy", englishExample: "He is good at running.", vietnameseExample: "Cậu ấy giỏi chạy." },
+                { english: "skipping", vietnamese: "nhảy dây", englishExample: "The girls are skipping rope.", vietnameseExample: "Những cô bé đang nhảy dây." },
+                { english: "climbing", vietnamese: "leo núi", englishExample: "I like climbing mountains.", vietnameseExample: "Tôi thích leo núi." },
+                { english: "skiing", vietnamese: "trượt tuyết", englishExample: "Tom can't go skiing in Vietnam.", vietnameseExample: "Tom không thể trượt tuyết ở Việt Nam." },
+                { english: "skating", vietnamese: "trượt patin", englishExample: "We go skating at the park.", vietnameseExample: "Chúng tôi đi trượt patin ở công viên." }
+            ]
+        },
+        {
+            title: "School Subjects – Môn học",
+            words: [
+                { english: "Maths", vietnamese: "Toán", englishExample: "I have Maths on Monday.", vietnameseExample: "Tôi học Toán vào thứ Hai." },
+                { english: "English", vietnamese: "Tiếng Anh", englishExample: "English is my favourite subject.", vietnameseExample: "Tiếng Anh là môn tôi yêu thích." },
+                { english: "Science", vietnamese: "Khoa học", englishExample: "We learn about plants in Science.", vietnameseExample: "Chúng tôi học về cây cối trong môn Khoa học." },
+                { english: "Music", vietnamese: "Âm nhạc", englishExample: "We sing songs in Music class.", vietnameseExample: "Chúng tôi hát trong tiết Âm nhạc." },
+                { english: "Art", vietnamese: "Mỹ thuật", englishExample: "We draw pictures in Art class.", vietnameseExample: "Chúng tôi vẽ tranh trong tiết Mỹ thuật." },
+                { english: "PE (Physical Education)", vietnamese: "Thể dục", englishExample: "We play football in PE.", vietnameseExample: "Chúng tôi chơi bóng đá trong tiết Thể dục." },
+                { english: "IT (Information Technology)", vietnamese: "Tin học", englishExample: "We use computers in IT class.", vietnameseExample: "Chúng tôi dùng máy tính trong tiết Tin học." },
+                { english: "Vietnamese", vietnamese: "tiếng Việt", englishExample: "I learn Vietnamese at school.", vietnameseExample: "Tôi học tiếng Việt ở trường." },
+                { english: "History", vietnamese: "Lịch sử", englishExample: "We learn about kings in History.", vietnameseExample: "Chúng tôi học về các vị vua trong môn Lịch sử." },
+                { english: "Geography", vietnamese: "Địa lý", englishExample: "We study countries in Geography.", vietnameseExample: "Chúng tôi học về các quốc gia trong môn Địa lý." }
+            ]
+        },
+        {
+            title: "Time Expressions – Thời gian & Tần suất",
+            words: [
+                { english: "today", vietnamese: "Hôm nay", englishExample: "I go to school today.", vietnameseExample: "Hôm nay tôi đi học." },
+                { english: "yesterday", vietnamese: "Hôm qua", englishExample: "I played football yesterday.", vietnameseExample: "Hôm qua tôi chơi bóng đá." },
+                { english: "tomorrow", vietnamese: "Ngày mai", englishExample: "We will visit Grandma tomorrow.", vietnameseExample: "Ngày mai chúng tôi sẽ thăm bà." },
+                { english: "morning", vietnamese: "buổi sáng", englishExample: "I get up early in the morning.", vietnameseExample: "Tôi dậy sớm vào buổi sáng." },
+                { english: "afternoon", vietnamese: "buổi chiều", englishExample: "We play in the afternoon.", vietnameseExample: "Chúng tôi chơi vào buổi chiều." },
+                { english: "evening", vietnamese: "buổi tối", englishExample: "I read books in the evening.", vietnameseExample: "Tôi đọc sách vào buổi tối." },
+                { english: "every day", vietnamese: "mỗi ngày", englishExample: "I brush my teeth every day.", vietnameseExample: "Tôi đánh răng mỗi ngày." },
+                { english: "once a week", vietnamese: "một lần mỗi tuần", englishExample: "I go swimming once a week.", vietnameseExample: "Tôi đi bơi một lần mỗi tuần." },
+                { english: "twice a week", vietnamese: "hai lần mỗi tuần", englishExample: "We have Music twice a week.", vietnameseExample: "Chúng tôi học Âm nhạc hai lần mỗi tuần." },
+                { english: "on Monday", vietnamese: "vào thứ Hai", englishExample: "I have English on Monday.", vietnameseExample: "Tôi học tiếng Anh vào thứ Hai." }
+            ]
+        },
+        {
+            title: "Technology – Công nghệ",
+            words: [
+                { english: "computer", vietnamese: "máy tính", englishExample: "We use a computer in IT class.", vietnameseExample: "Chúng tôi dùng máy tính trong tiết Tin học." },
+                { english: "laptop", vietnamese: "máy tính xách tay", englishExample: "My father works on his laptop.", vietnameseExample: "Bố tôi làm việc bằng máy tính xách tay." },
+                { english: "phone", vietnamese: "điện thoại", englishExample: "This is my new phone.", vietnameseExample: "Đây là điện thoại mới của tôi." },
+                { english: "television (TV)", vietnamese: "tivi", englishExample: "I watch cartoons on TV.", vietnameseExample: "Tôi xem phim hoạt hình trên TV." },
+                { english: "radio", vietnamese: "đài", englishExample: "My grandpa listens to the radio.", vietnameseExample: "Ông tôi nghe đài." },
+                { english: "camera", vietnamese: "máy ảnh", englishExample: "She takes photos with a camera.", vietnameseExample: "Cô ấy chụp ảnh bằng máy ảnh." },
+                { english: "robot", vietnamese: "rô-bốt", englishExample: "There are two robots on the shelf.", vietnameseExample: "Có hai con rô-bốt trên kệ." },
+                { english: "keyboard", vietnamese: "bàn phím", englishExample: "I type with the keyboard.", vietnameseExample: "Tôi gõ bằng bàn phím." },
+                { english: "internet", vietnamese: "Internet", englishExample: "I search on the internet.", vietnameseExample: "Tôi tìm kiếm trên Internet." },
+                { english: "email", vietnamese: "email", englishExample: "I send an email to my friend.", vietnameseExample: "Tôi gửi email cho bạn." }
+            ]
+        },
+        {
+            title: "Health & Body Care – Sức khỏe và chăm sóc cơ thể",
+            words: [
+                { english: "healthy", vietnamese: "khỏe mạnh", englishExample: "Eating fruit is healthy.", vietnameseExample: "Ăn trái cây là tốt cho sức khỏe." },
+                { english: "sick", vietnamese: "ốm", englishExample: "I am sick today.", vietnameseExample: "Hôm nay tôi bị ốm." },
+                { english: "strong", vietnamese: "khỏe mạnh", englishExample: "My brother is strong.", vietnameseExample: "Anh trai tôi khỏe mạnh." },
+                { english: "weak", vietnamese: "yếu", englishExample: "I feel weak.", vietnameseExample: "Tôi cảm thấy yếu." },
+                { english: "clean", vietnamese: "sạch sẽ", englishExample: "Wash your hands to be clean.", vietnameseExample: "Rửa tay để sạch sẽ nhé." },
+                { english: "brush", vietnamese: "đánh răng", englishExample: "Brush your teeth twice a day.", vietnameseExample: "Đánh răng hai lần mỗi ngày." },
+                { english: "wash", vietnamese: "Rửa", englishExample: "Wash your face every morning.", vietnameseExample: "Rửa mặt mỗi buổi sáng." },
+                { english: "eat", vietnamese: "ăn", englishExample: "Eat more vegetables.", vietnameseExample: "Hãy ăn nhiều rau hơn." },
+                { english: "drink", vietnamese: "Uống", englishExample: "Drink water every day.", vietnameseExample: "Uống nước mỗi ngày." },
+                { english: "sleep", vietnamese: "ngủ", englishExample: "You should sleep early.", vietnameseExample: "Bạn nên ngủ sớm." }
+            ]
+        },
+        {
+            title: "Feelings 2 – Emotions & Manners",
+            words: [
+                { english: "glad", vietnamese: "vui", englishExample: "I am glad to see you.", vietnameseExample: "Tôi vui khi gặp bạn." },
+                { english: "excited", vietnamese: "háo hức", englishExample: "The children are excited about the trip.", vietnameseExample: "Những đứa trẻ háo hức về chuyến đi." },
+                { english: "bored", vietnamese: "chán", englishExample: "I am bored with this game.", vietnameseExample: "Tôi chán trò chơi này." },
+                { english: "worried", vietnamese: "lo lắng", englishExample: "She is worried about her test.", vietnameseExample: "Cô ấy lo lắng về bài kiểm tra." },
+                { english: "proud", vietnamese: "tự hào", englishExample: "I am proud of my school.", vietnameseExample: "Tôi tự hào về trường của mình." },
+                { english: "polite", vietnamese: "lễ phép", englishExample: "Be polite to your teacher.", vietnameseExample: "Hãy lễ phép với cô giáo." },
+                { english: "kind", vietnamese: "tốt bụng", englishExample: "He is kind to animals.", vietnameseExample: "Cậu ấy tốt bụng với động vật." },
+                { english: "helpful", vietnamese: "hay giúp đỡ", englishExample: "My friend is very helpful.", vietnameseExample: "Bạn tôi rất hay giúp đỡ." },
+                { english: "honest", vietnamese: "trung thực", englishExample: "We should be honest.", vietnameseExample: "Chúng ta nên trung thực." },
+                { english: "friendly", vietnamese: "thân thiện", englishExample: "Our class is very friendly.", vietnameseExample: "Lớp chúng tôi rất thân thiện." }
+            ]
+        },
+        {
+            title: "Festivals & Culture – Lễ hội và văn hóa",
+            words: [
+                { english: "festival", vietnamese: "lễ hội", englishExample: "Tet is an important festival in Vietnam.", vietnameseExample: "Tết là lễ hội quan trọng ở Việt Nam." },
+                { english: "lantern", vietnamese: "lồng đèn", englishExample: "We make lanterns at Mid-Autumn Festival.", vietnameseExample: "Chúng tôi làm lồng đèn vào Tết Trung thu." },
+                { english: "dragon dance", vietnamese: "múa lân", englishExample: "I like the dragon dance.", vietnameseExample: "Tôi thích múa lân." },
+                { english: "fireworks", vietnamese: "pháo hoa", englishExample: "We watch fireworks on New Year's Eve.", vietnameseExample: "Chúng tôi xem pháo hoa vào đêm giao thừa." },
+                { english: "lucky money", vietnamese: "lì xì", englishExample: "I get lucky money from my grandparents.", vietnameseExample: "Tôi nhận lì xì từ ông bà." },
+                { english: "traditional", vietnamese: "truyền thống", englishExample: "We wear traditional clothes at Tet.", vietnameseExample: "Chúng tôi mặc trang phục truyền thống vào Tết." },
+                { english: "parade", vietnamese: "diễu hành", englishExample: "There is a parade on National Day.", vietnameseExample: "Có cuộc diễu hành vào Ngày Quốc khánh." },
+                { english: "song", vietnamese: "bài hát", englishExample: "We sing songs at the festival.", vietnameseExample: "Chúng tôi hát trong lễ hội." },
+                { english: "dance", vietnamese: "nhảy múa", englishExample: "They dance happily at the party.", vietnameseExample: "Họ nhảy múa vui vẻ tại bữa tiệc." },
+                { english: "decorate", vietnamese: "trang trí", englishExample: "We decorate our house with flowers.", vietnameseExample: "Chúng tôi trang trí nhà bằng hoa." }
+            ]
+        },
+        {
+            title: "Communication – Giao tiếp",
+            words: [
+                { english: "hello", vietnamese: "Xin chào", englishExample: "Hello! How are you?", vietnameseExample: "Xin chào! Bạn khỏe không?" },
+                { english: "goodbye", vietnamese: "Tạm biệt", englishExample: "Goodbye, see you tomorrow!", vietnameseExample: "Tạm biệt, hẹn gặp ngày mai!" },
+                { english: "please", vietnamese: "Làm ơn", englishExample: "Please open the door.", vietnameseExample: "Làm ơn mở cửa." },
+                { english: "thank you", vietnamese: "Cảm ơn", englishExample: "Thank you very much.", vietnameseExample: "Cảm ơn bạn rất nhiều." },
+                { english: "excuse me", vietnamese: "Xin lỗi", englishExample: "Excuse me, where's the toilet?", vietnameseExample: "Xin lỗi, nhà vệ sinh ở đâu vậy?" },
+                { english: "sorry", vietnamese: "xin lỗi", englishExample: "I'm sorry, teacher.", vietnameseExample: "Em xin lỗi, cô ạ." },
+                { english: "yes", vietnamese: "Vâng", englishExample: "Yes, I do.", vietnameseExample: "Vâng, đúng rồi." },
+                { english: "no", vietnamese: "Không", englishExample: "No, thank you.", vietnameseExample: "Không, cảm ơn." },
+                { english: "what", vietnamese: "gì", englishExample: "What's your name?", vietnameseExample: "Tên bạn là gì?" },
+                { english: "where", vietnamese: "đâu", englishExample: "Where do you live?", vietnameseExample: "Bạn sống ở đâu?" }
+            ]
+        },
+        {
+            title: "Directions & Positions – Phương hướng và vị trí",
+            words: [
+                { english: "left", vietnamese: "trái", englishExample: "Turn left, please.", vietnameseExample: "Làm ơn rẽ trái." },
+                { english: "right", vietnamese: "phải", englishExample: "The bank is on the right.", vietnameseExample: "Ngân hàng ở bên phải." },
+                { english: "straight", vietnamese: "thẳng", englishExample: "Go straight ahead.", vietnameseExample: "Đi thẳng." },
+                { english: "near", vietnamese: "gần", englishExample: "My school is near my house.", vietnameseExample: "Trường tôi ở gần nhà tôi." },
+                { english: "far", vietnamese: "xa", englishExample: "The zoo is far from here.", vietnameseExample: "Sở thú ở xa chỗ này." },
+                { english: "next to", vietnamese: "cạnh", englishExample: "The post office is next to the bank.", vietnameseExample: "Bưu điện ở cạnh ngân hàng." },
+                { english: "behind", vietnamese: "sau", englishExample: "The cat is behind the door.", vietnameseExample: "Con mèo ở sau cánh cửa." },
+                { english: "in front of", vietnamese: "trước", englishExample: "The bus stop is in front of the school.", vietnameseExample: "Trạm xe buýt ở trước trường học." },
+                { english: "between", vietnamese: "giữa", englishExample: "The park is between two buildings.", vietnameseExample: "Công viên nằm giữa hai tòa nhà." },
+                { english: "opposite", vietnamese: "đối diện", englishExample: "The shop is opposite the hospital.", vietnameseExample: "Cửa hàng đối diện bệnh viện." }
+            ]
+        },
+        {
+            title: "Adjectives for Kids – Tính từ cơ bản",
+            words: [
+                { english: "big", vietnamese: "to", englishExample: "The elephant is big.", vietnameseExample: "Con voi to lớn." },
+                { english: "small", vietnamese: "nhỏ", englishExample: "My dog is small.", vietnameseExample: "Con chó của tôi nhỏ." },
+                { english: "long", vietnamese: "dài", englishExample: "The river is long.", vietnameseExample: "Dòng sông dài." },
+                { english: "short", vietnamese: "ngắn", englishExample: "He has short hair.", vietnameseExample: "Cậu ấy có tóc ngắn." },
+                { english: "tall", vietnamese: "cao", englishExample: "My brother is tall.", vietnameseExample: "Anh trai tôi cao." },
+                { english: "fat", vietnamese: "béo", englishExample: "The cat is fat.", vietnameseExample: "Con mèo béo." },
+                { english: "thin", vietnamese: "gầy", englishExample: "The boy is thin.", vietnameseExample: "Cậu bé gầy." },
+                { english: "beautiful", vietnamese: "đẹp", englishExample: "The flower is beautiful.", vietnameseExample: "Bông hoa đẹp." },
+                { english: "ugly", vietnamese: "xấu xí", englishExample: "The monster looks ugly.", vietnameseExample: "Con quái vật trông xấu xí." },
+                { english: "funny", vietnamese: "vui nhộn", englishExample: "This story is funny.", vietnameseExample: "Câu chuyện này thật vui nhộn." }
+            ]
+        },
+        {
+            title: "Prepositions – Giới từ chỉ nơi chốn & thời gian",
+            words: [
+                { english: "in", vietnamese: "trong", englishExample: "The cat is in the box.", vietnameseExample: "Con mèo ở trong hộp." },
+                { english: "on", vietnamese: "trên", englishExample: "The book is on the table.", vietnameseExample: "Quyển sách ở trên bàn." },
+                { english: "under", vietnamese: "dưới", englishExample: "The ball is under the chair.", vietnameseExample: "Quả bóng ở dưới ghế." },
+                { english: "behind", vietnamese: "sau", englishExample: "The dog is behind the tree.", vietnameseExample: "Con chó ở sau cái cây." },
+                { english: "in front of", vietnamese: "trước", englishExample: "The car is in front of the house.", vietnameseExample: "Chiếc xe ở trước ngôi nhà." },
+                { english: "next to", vietnamese: "cạnh", englishExample: "The shop is next to the bank.", vietnameseExample: "Cửa hàng ở cạnh ngân hàng." },
+                { english: "between", vietnamese: "giữa", englishExample: "The park is between two streets.", vietnameseExample: "Công viên nằm giữa hai con đường." },
+                { english: "near", vietnamese: "gần", englishExample: "The school is near my home.", vietnameseExample: "Trường học ở gần nhà tôi." },
+                { english: "at", vietnamese: "ở", englishExample: "I'm at school now.", vietnameseExample: "Tôi đang ở trường." },
+                { english: "on Sunday", vietnamese: "vào Chủ nhật", englishExample: "We go to the zoo on Sunday.", vietnameseExample: "Chúng tôi đi sở thú vào Chủ nhật." }
+            ]
+        },
+        {
+            title: "Verbs 2 – Daily Actions",
+            words: [
+                { english: "cook", vietnamese: "nấu", englishExample: "My mother cooks dinner.", vietnameseExample: "Mẹ tôi nấu bữa tối." },
+                { english: "clean", vietnamese: "dọn dẹp", englishExample: "I clean my room every day.", vietnameseExample: "Tôi dọn phòng mỗi ngày." },
+                { english: "wash", vietnamese: "rửa", englishExample: "He washes his hands.", vietnameseExample: "Cậu ấy rửa tay." },
+                { english: "brush", vietnamese: "đánh", englishExample: "She brushes her teeth.", vietnameseExample: "Cô ấy đánh răng." },
+                { english: "open", vietnamese: "mở", englishExample: "Open the window, please.", vietnameseExample: "Làm ơn mở cửa sổ." },
+                { english: "close", vietnamese: "Đóng", englishExample: "Close your book.", vietnameseExample: "Đóng sách lại." },
+                { english: "draw", vietnamese: "vẽ", englishExample: "I draw pictures.", vietnameseExample: "Tôi vẽ tranh." },
+                { english: "write", vietnamese: "viết", englishExample: "I write letters to my friends.", vietnameseExample: "Tôi viết thư cho bạn." },
+                { english: "read", vietnamese: "đọc", englishExample: "We read books in class.", vietnameseExample: "Chúng tôi đọc sách trong lớp." },
+                { english: "help", vietnamese: "giúp", englishExample: "I help my mom at home.", vietnameseExample: "Tôi giúp mẹ ở nhà." }
+            ]
+        },
+        {
+            title: "Numbers & Quantities – Số và lượng",
+            words: [
+                { english: "one", vietnamese: "một", englishExample: "I have one pencil.", vietnameseExample: "Tôi có một cây bút chì." },
+                { english: "two", vietnamese: "hai", englishExample: "There are two cats.", vietnameseExample: "Có hai con mèo." },
+                { english: "three", vietnamese: "ba", englishExample: "I see three birds.", vietnameseExample: "Tôi thấy ba con chim." },
+                { english: "many", vietnamese: "nhiều", englishExample: "There are many apples.", vietnameseExample: "Có nhiều quả táo." },
+                { english: "few", vietnamese: "ít", englishExample: "I have few toys.", vietnameseExample: "Tôi có ít đồ chơi." },
+                { english: "some", vietnamese: "một ít", englishExample: "I have some milk.", vietnameseExample: "Tôi có một ít sữa." },
+                { english: "any", vietnamese: "bất kỳ", englishExample: "Do you have any pens?", vietnameseExample: "Bạn có cây bút nào không?" },
+                { english: "a lot of", vietnamese: "nhiều", englishExample: "We have a lot of books.", vietnameseExample: "Chúng tôi có nhiều sách." },
+                { english: "first", vietnamese: "đầu tiên", englishExample: "I'm the first in line.", vietnameseExample: "Tôi đứng đầu hàng." },
+                { english: "second", vietnamese: "thứ hai", englishExample: "She is the second student.", vietnameseExample: "Cô ấy là học sinh thứ hai." }
+            ]
+        },
+        {
+            title: "Opposites – Từ trái nghĩa cơ bản",
+            words: [
+                { english: "big - small", vietnamese: "to - nhỏ", englishExample: "The elephant is big, the mouse is small.", vietnameseExample: "Con voi to, con chuột nhỏ." },
+                { english: "hot - cold", vietnamese: "nóng - lạnh", englishExample: "The tea is hot, the water is cold.", vietnameseExample: "Trà nóng, nước lạnh." },
+                { english: "fast - slow", vietnamese: "nhanh - chậm", englishExample: "The rabbit is fast, the turtle is slow.", vietnameseExample: "Con thỏ nhanh, con rùa chậm." },
+                { english: "old - young", vietnamese: "già - trẻ", englishExample: "My grandpa is old, I am young.", vietnameseExample: "Ông tôi già, tôi trẻ." },
+                { english: "tall - short", vietnamese: "cao - thấp", englishExample: "The boy is tall, the girl is short.", vietnameseExample: "Cậu bé cao, cô bé thấp." },
+                { english: "long - short", vietnamese: "dài - ngắn", englishExample: "This river is long, that one is short.", vietnameseExample: "Con sông này dài, con kia ngắn." },
+                { english: "happy - sad", vietnamese: "vui - buồn", englishExample: "I'm happy, not sad.", vietnameseExample: "Tôi vui, không buồn." },
+                { english: "near - far", vietnamese: "gần - xa", englishExample: "My house is near the park, not far.", vietnameseExample: "Nhà tôi gần công viên, không xa." },
+                { english: "clean - dirty", vietnamese: "sạch - bẩn", englishExample: "My hands are clean, not dirty.", vietnameseExample: "Tay tôi sạch, không bẩn." },
+                { english: "good - bad", vietnamese: "tốt - xấu", englishExample: "This apple is good, that one is bad.", vietnameseExample: "Quả táo này ngon, quả kia hỏng." }
+            ]
+        },
+        {
+            title: "School Life Expressions – Cụm từ trong trường học",
+            words: [
+                { english: "go to school", vietnamese: "đi học", englishExample: "I go to school every day.", vietnameseExample: "Tôi đi học mỗi ngày." },
+                { english: "do homework", vietnamese: "làm bài tập", englishExample: "I do my homework after dinner.", vietnameseExample: "Tôi làm bài tập sau bữa tối." },
+                { english: "read a book", vietnamese: "đọc sách", englishExample: "Let's read a book.", vietnameseExample: "Hãy đọc một quyển sách." },
+                { english: "raise your hand", vietnamese: "giơ tay", englishExample: "Raise your hand, please.", vietnameseExample: "Làm ơn giơ tay lên." },
+                { english: "open your book", vietnamese: "mở sách", englishExample: "Open your book to page 10.", vietnameseExample: "Mở sách đến trang 10." },
+                { english: "write on the board", vietnamese: "viết lên bảng", englishExample: "The teacher writes on the board.", vietnameseExample: "Cô giáo viết lên bảng." },
+                { english: "listen to the teacher", vietnamese: "lắng nghe giáo viên", englishExample: "Listen to the teacher carefully.", vietnameseExample: "Hãy lắng nghe cô giáo cẩn thận." },
+                { english: "work in pairs", vietnamese: "làm việc theo cặp", englishExample: "Work in pairs, please.", vietnameseExample: "Làm việc theo cặp nhé." },
+                { english: "draw a picture", vietnamese: "vẽ một bức tranh", englishExample: "Draw a picture of your family.", vietnameseExample: "Vẽ một bức tranh về gia đình bạn." },
+                { english: "answer the question", vietnamese: "trả lời câu hỏi", englishExample: "Please answer the question.", vietnameseExample: "Làm ơn trả lời câu hỏi." }
+            ]
+        },
+        {
+            title: "Weather & Seasons 2 – Thời tiết và các mùa",
+            words: [
+                { english: "spring", vietnamese: "mùa xuân", englishExample: "Flowers bloom in spring.", vietnameseExample: "Hoa nở vào mùa xuân." },
+                { english: "summer", vietnamese: "mùa hè", englishExample: "We go swimming in summer.", vietnameseExample: "Chúng tôi đi bơi vào mùa hè." },
+                { english: "autumn", vietnamese: "mùa thu", englishExample: "Leaves fall in autumn.", vietnameseExample: "Lá rơi vào mùa thu." },
+                { english: "winter", vietnamese: "mùa đông", englishExample: "It's cold in winter.", vietnameseExample: "Trời lạnh vào mùa đông." },
+                { english: "sunny", vietnamese: "nắng", englishExample: "It's sunny today.", vietnameseExample: "Hôm nay trời nắng." },
+                { english: "rainy", vietnamese: "mưa", englishExample: "It's rainy this afternoon.", vietnameseExample: "Chiều nay trời mưa." },
+                { english: "windy", vietnamese: "gió", englishExample: "It's windy outside.", vietnameseExample: "Ngoài trời có gió." },
+                { english: "cloudy", vietnamese: "nhiều mây", englishExample: "It's cloudy this morning.", vietnameseExample: "Sáng nay trời nhiều mây." },
+                { english: "storm", vietnamese: "bão", englishExample: "There is a big storm.", vietnameseExample: "Có một cơn bão lớn." },
+                { english: "snow", vietnamese: "tuyết", englishExample: "It doesn't snow in Vietnam.", vietnameseExample: "Ở Việt Nam không có tuyết." }
+            ]
+        },
+        {
+            title: "Nature Actions – Hành động trong thiên nhiên",
+            words: [
+                { english: "grow", vietnamese: "mọc", englishExample: "Flowers grow in the garden.", vietnameseExample: "Hoa mọc trong vườn." },
+                { english: "bloom", vietnamese: "nở", englishExample: "The flowers bloom in spring.", vietnameseExample: "Hoa nở vào mùa xuân." },
+                { english: "fall", vietnamese: "rơi", englishExample: "Leaves fall from the trees.", vietnameseExample: "Lá rơi từ trên cây." },
+                { english: "shine", vietnamese: "chiếu sáng", englishExample: "The sun shines in the sky.", vietnameseExample: "Mặt trời chiếu sáng trên trời." },
+                { english: "blow", vietnamese: "thổi", englishExample: "The wind blows softly.", vietnameseExample: "Gió thổi nhẹ nhàng." },
+                { english: "rain", vietnamese: "mưa", englishExample: "It rains in the afternoon.", vietnameseExample: "Trời mưa vào buổi chiều." },
+                { english: "snow", vietnamese: "tuyết rơi", englishExample: "It snows in winter.", vietnameseExample: "Tuyết rơi vào mùa đông." },
+                { english: "fly", vietnamese: "bay", englishExample: "Birds fly in the sky.", vietnameseExample: "Chim bay trên bầu trời." },
+                { english: "swim", vietnamese: "bơi", englishExample: "Fish swim in the river.", vietnameseExample: "Cá bơi trong sông." },
+                { english: "climb", vietnamese: "leo", englishExample: "Monkeys climb trees.", vietnameseExample: "Khỉ leo cây." }
+            ]
+        },
+        {
+            title: "Clothes & Accessories 2 – Quần áo & phụ kiện",
+            words: [
+                { english: "cap", vietnamese: "mũ lưỡi trai", englishExample: "I wear a red cap.", vietnameseExample: "Tôi đội mũ lưỡi trai đỏ." },
+                { english: "gloves", vietnamese: "găng tay", englishExample: "I wear gloves in winter.", vietnameseExample: "Tôi đeo găng tay vào mùa đông." },
+                { english: "scarf", vietnamese: "khăn quàng", englishExample: "She has a long scarf.", vietnameseExample: "Cô ấy có chiếc khăn quàng dài." },
+                { english: "sunglasses", vietnamese: "kính râm", englishExample: "He wears sunglasses.", vietnameseExample: "Cậu ấy đeo kính râm." },
+                { english: "belt", vietnamese: "thắt lưng", englishExample: "My belt is brown.", vietnameseExample: "Thắt lưng của tôi màu nâu." },
+                { english: "jacket", vietnamese: "áo khoác", englishExample: "I wear a jacket in the rain.", vietnameseExample: "Tôi mặc áo khoác khi trời mưa." },
+                { english: "shorts", vietnamese: "quần đùi", englishExample: "He wears shorts in summer.", vietnameseExample: "Cậu ấy mặc quần đùi vào mùa hè." },
+                { english: "jeans", vietnamese: "quần jean", englishExample: "She likes blue jeans.", vietnameseExample: "Cô ấy thích quần jean xanh." },
+                { english: "uniform", vietnamese: "đồng phục", englishExample: "We wear uniforms at school.", vietnameseExample: "Chúng tôi mặc đồng phục ở trường." },
+                { english: "shoes", vietnamese: "giày", englishExample: "My shoes are black.", vietnameseExample: "Giày của tôi màu đen." }
+            ]
+        },
+        {
+            title: "Around the Town – Quanh thành phố",
+            words: [
+                { english: "street", vietnamese: "đường", englishExample: "My house is on Green Street.", vietnameseExample: "Nhà tôi ở đường Green." },
+                { english: "shop", vietnamese: "cửa hàng", englishExample: "I buy toys at the shop.", vietnameseExample: "Tôi mua đồ chơi ở cửa hàng." },
+                { english: "market", vietnamese: "chợ", englishExample: "We go to the market on Sunday.", vietnameseExample: "Chúng tôi đi chợ vào Chủ nhật." },
+                { english: "restaurant", vietnamese: "nhà hàng", englishExample: "Let's eat at the restaurant.", vietnameseExample: "Hãy ăn ở nhà hàng nhé." },
+                { english: "cinema", vietnamese: "rạp chiếu phim", englishExample: "We watch a film at the cinema.", vietnameseExample: "Chúng tôi xem phim ở rạp chiếu phim." },
+                { english: "museum", vietnamese: "viện bảo tàng", englishExample: "There are old things in the museum.", vietnameseExample: "Có những đồ vật cổ trong viện bảo tàng." },
+                { english: "stadium", vietnamese: "Sân vận động", englishExample: "The stadium is very big.", vietnameseExample: "Sân vận động rất lớn." },
+                { english: "bus stop", vietnamese: "Trạm xe buýt", englishExample: "The bus stop is near the park.", vietnameseExample: "Trạm xe buýt ở gần công viên." },
+                { english: "bakery", vietnamese: "tiệm bánh", englishExample: "I buy bread at the bakery.", vietnameseExample: "Tôi mua bánh mì ở tiệm bánh." },
+                { english: "police station", vietnamese: "Đồn cảnh sát", englishExample: "The police station is next to the post office.", vietnameseExample: "Đồn cảnh sát ở cạnh bưu điện." }
+            ]
+        },
+        {
+            title: "Shapes & Sizes – Hình dạng và kích thước",
+            words: [
+                { english: "circle", vietnamese: "hình tròn", englishExample: "Draw a big circle.", vietnameseExample: "Vẽ một hình tròn lớn." },
+                { english: "square", vietnamese: "hình vuông", englishExample: "The box is square.", vietnameseExample: "Cái hộp có hình vuông." },
+                { english: "triangle", vietnamese: "hình tam giác", englishExample: "This sign is a triangle.", vietnameseExample: "Biển báo này có hình tam giác." },
+                { english: "rectangle", vietnamese: "hình chữ nhật", englishExample: "The table is a rectangle.", vietnameseExample: "Cái bàn hình chữ nhật." },
+                { english: "round", vietnamese: "tròn", englishExample: "The ball is round.", vietnameseExample: "Quả bóng có hình tròn." },
+                { english: "long", vietnamese: "dài", englishExample: "The road is long.", vietnameseExample: "Con đường dài." },
+                { english: "short", vietnamese: "ngắn", englishExample: "The pencil is short.", vietnameseExample: "Cây bút chì ngắn." },
+                { english: "big", vietnamese: "to", englishExample: "The elephant is big.", vietnameseExample: "Con voi to." },
+                { english: "small", vietnamese: "nhỏ", englishExample: "My dog is small.", vietnameseExample: "Con chó của tôi nhỏ." },
+                { english: "tiny", vietnamese: "nhỏ xíu", englishExample: "Look! A tiny bird.", vietnameseExample: "Nhìn kìa! Một con chim nhỏ xíu." }
+            ]
+        },
+        {
+            title: "Transport 2 – Phương tiện giao thông (mở rộng)",
+            words: [
+                { english: "bus", vietnamese: "xe buýt", englishExample: "We go to school by bus.", vietnameseExample: "Chúng tôi đi học bằng xe buýt." },
+                { english: "taxi", vietnamese: "taxi", englishExample: "We take a taxi to the airport.", vietnameseExample: "Chúng tôi đi taxi đến sân bay." },
+                { english: "train", vietnamese: "Tàu hỏa", englishExample: "The train is very long.", vietnameseExample: "Tàu hỏa rất dài." },
+                { english: "ship", vietnamese: "Con tàu", englishExample: "The ship sails on the sea.", vietnameseExample: "Con tàu chạy trên biển." },
+                { english: "boat", vietnamese: "thuyền", englishExample: "The fisherman is on his boat.", vietnameseExample: "Người đánh cá đang ở trên thuyền." },
+                { english: "airplane", vietnamese: "Máy bay", englishExample: "The airplane is flying.", vietnameseExample: "Máy bay đang bay." },
+                { english: "helicopter", vietnamese: "Trực thăng", englishExample: "The helicopter is in the sky.", vietnameseExample: "Trực thăng đang ở trên trời." },
+                { english: "motorbike", vietnamese: "xe máy", englishExample: "My mother goes to work by motorbike.", vietnameseExample: "Mẹ tôi đi làm bằng xe máy." },
+                { english: "bicycle", vietnamese: "xe đạp", englishExample: "I ride my bicycle to school.", vietnameseExample: "Tôi đạp xe đến trường." },
+                { english: "truck", vietnamese: "Xe tải", englishExample: "The truck carries fruit.", vietnameseExample: "Xe tải chở trái cây." }
+            ]
+        },
+        {
+            title: "Food & Drinks 2 – Món ăn & đồ uống mở rộng",
+            words: [
+                { english: "beef", vietnamese: "thịt bò", englishExample: "I eat beef for lunch.", vietnameseExample: "Tôi ăn thịt bò vào bữa trưa." },
+                { english: "pork", vietnamese: "thịt heo", englishExample: "We have pork and rice.", vietnameseExample: "Chúng tôi ăn thịt heo và cơm." },
+                { english: "soup", vietnamese: "canh", englishExample: "The soup is hot.", vietnameseExample: "Món canh nóng." },
+                { english: "salad", vietnamese: "salad", englishExample: "She likes fruit salad.", vietnameseExample: "Cô ấy thích món salad trái cây." },
+                { english: "egg", vietnamese: "trứng", englishExample: "I eat an egg for breakfast.", vietnameseExample: "Tôi ăn một quả trứng vào bữa sáng." },
+                { english: "ice cream", vietnamese: "kem", englishExample: "I love chocolate ice cream.", vietnameseExample: "Tôi thích kem sô-cô-la." },
+                { english: "sandwich", vietnamese: "bánh mì kẹp", englishExample: "He eats a sandwich at school.", vietnameseExample: "Cậu ấy ăn bánh mì kẹp ở trường." },
+                { english: "hamburger", vietnamese: "hamburger", englishExample: "I want a hamburger, please.", vietnameseExample: "Tôi muốn một chiếc bánh mì kẹp thịt, làm ơn." },
+                { english: "juice", vietnamese: "nước ép", englishExample: "I drink apple juice.", vietnameseExample: "Tôi uống nước táo." },
+                { english: "soda", vietnamese: "nước ngọt", englishExample: "We don't drink soda every day.", vietnameseExample: "Chúng tôi không uống nước ngọt mỗi ngày." }
+            ]
+        },
+        {
+            title: "Technology 2 – Công nghệ & thiết bị mở rộng",
+            words: [
+                { english: "smartphone", vietnamese: "điện thoại thông minh", englishExample: "I play games on my smartphone.", vietnameseExample: "Tôi chơi trò chơi trên điện thoại thông minh." },
+                { english: "tablet", vietnamese: "máy tính bảng", englishExample: "She watches videos on her tablet.", vietnameseExample: "Cô ấy xem video trên máy tính bảng." },
+                { english: "mouse", vietnamese: "chuột", englishExample: "Use the mouse to click.", vietnameseExample: "Dùng chuột để bấm." },
+                { english: "printer", vietnamese: "máy in", englishExample: "We print photos with the printer.", vietnameseExample: "Chúng tôi in ảnh bằng máy in." },
+                { english: "screen", vietnamese: "Màn hình", englishExample: "The screen is big.", vietnameseExample: "Màn hình lớn." },
+                { english: "charger", vietnamese: "sạc", englishExample: "I need my phone charger.", vietnameseExample: "Tôi cần sạc điện thoại của tôi." },
+                { english: "remote", vietnamese: "điều khiển", englishExample: "Give me the TV remote.", vietnameseExample: "Đưa tôi điều khiển TV." },
+                { english: "keyboard", vietnamese: "bàn phím", englishExample: "I type on the keyboard.", vietnameseExample: "Tôi gõ trên bàn phím." },
+                { english: "speaker", vietnamese: "Loa", englishExample: "The speaker is loud.", vietnameseExample: "Loa phát to." },
+                { english: "game", vietnamese: "trò chơi", englishExample: "I play computer games.", vietnameseExample: "Tôi chơi trò chơi điện tử." }
+            ]
+        },
+        {
+            title: "Time & Calendar – Thời gian và lịch",
+            words: [
+                { english: "morning", vietnamese: "buổi sáng", englishExample: "I get up in the morning.", vietnameseExample: "Tôi dậy vào buổi sáng." },
+                { english: "afternoon", vietnamese: "buổi chiều", englishExample: "We play football in the afternoon.", vietnameseExample: "Chúng tôi chơi bóng đá vào buổi chiều." },
+                { english: "evening", vietnamese: "buổi tối", englishExample: "I read books in the evening.", vietnameseExample: "Tôi đọc sách vào buổi tối." },
+                { english: "night", vietnamese: "đêm", englishExample: "Good night, Mom!", vietnameseExample: "Chúc ngủ ngon, mẹ!" },
+                { english: "day", vietnamese: "ngày", englishExample: "Today is a sunny day.", vietnameseExample: "Hôm nay là một ngày nắng." },
+                { english: "week", vietnamese: "tuần", englishExample: "There are seven days in a week.", vietnameseExample: "Có bảy ngày trong một tuần." },
+                { english: "month", vietnamese: "tháng", englishExample: "January is the first month.", vietnameseExample: "Tháng Giêng là tháng đầu tiên." },
+                { english: "year", vietnamese: "năm", englishExample: "A year has twelve months.", vietnameseExample: "Một năm có mười hai tháng." },
+                { english: "today", vietnamese: "Hôm nay", englishExample: "Today is Monday.", vietnameseExample: "Hôm nay là thứ Hai." },
+                { english: "tomorrow", vietnamese: "Ngày mai", englishExample: "Tomorrow is my birthday.", vietnameseExample: "Ngày mai là sinh nhật tôi." }
+            ]
+        },
+        {
+            title: "People & Occupations 2 – Nghề nghiệp mở rộng",
+            words: [
+                { english: "firefighter", vietnamese: "Lính cứu hỏa", englishExample: "The firefighter helps people.", vietnameseExample: "Lính cứu hỏa giúp đỡ mọi người." },
+                { english: "dentist", vietnamese: "Nha sĩ", englishExample: "The dentist fixes my teeth.", vietnameseExample: "Nha sĩ chữa răng cho tôi." },
+                { english: "pilot", vietnamese: "Phi công", englishExample: "The pilot flies the plane.", vietnameseExample: "Phi công lái máy bay." },
+                { english: "artist", vietnamese: "Họa sĩ", englishExample: "The artist paints pictures.", vietnameseExample: "Họa sĩ vẽ tranh." },
+                { english: "singer", vietnamese: "Ca sĩ", englishExample: "The singer has a beautiful voice.", vietnameseExample: "Ca sĩ có giọng hát hay." },
+                { english: "dancer", vietnamese: "vũ công", englishExample: "She is a good dancer.", vietnameseExample: "Cô ấy là vũ công giỏi." },
+                { english: "engineer", vietnamese: "kỹ sư", englishExample: "My uncle is an engineer.", vietnameseExample: "Chú tôi là kỹ sư." },
+                { english: "builder", vietnamese: "Thợ xây", englishExample: "The builder works on a house.", vietnameseExample: "Thợ xây làm việc ở công trình." },
+                { english: "waiter", vietnamese: "Phục vụ", englishExample: "The waiter brings food.", vietnameseExample: "Phục vụ bàn mang đồ ăn." },
+                { english: "writer", vietnamese: "Nhà văn", englishExample: "The writer writes stories.", vietnameseExample: "Nhà văn viết truyện." }
+            ]
+        },
+        {
+            title: "Travel & Vacation – Du lịch và kỳ nghỉ",
+            words: [
+                { english: "travel", vietnamese: "du lịch", englishExample: "I like to travel by train.", vietnameseExample: "Tôi thích đi du lịch bằng tàu hỏa." },
+                { english: "trip", vietnamese: "chuyến đi", englishExample: "We have a school trip today.", vietnameseExample: "Hôm nay chúng tôi có chuyến đi tham quan." },
+                { english: "vacation", vietnamese: "kỳ nghỉ", englishExample: "Our family goes to the beach on vacation.", vietnameseExample: "Gia đình tôi đi biển vào kỳ nghỉ." },
+                { english: "hotel", vietnamese: "khách sạn", englishExample: "We stay at a nice hotel.", vietnameseExample: "Chúng tôi ở trong một khách sạn đẹp." },
+                { english: "beach", vietnamese: "bãi biển", englishExample: "We play on the beach.", vietnameseExample: "Chúng tôi chơi trên bãi biển." },
+                { english: "mountain", vietnamese: "núi", englishExample: "We climb the mountain.", vietnameseExample: "Chúng tôi leo núi." },
+                { english: "city", vietnamese: "thành phố", englishExample: "Hanoi is a big city.", vietnameseExample: "Hà Nội là một thành phố lớn." },
+                { english: "map", vietnamese: "bản đồ", englishExample: "Look at the map, please.", vietnameseExample: "Làm ơn nhìn bản đồ." },
+                { english: "suitcase", vietnamese: "vali", englishExample: "I put my clothes in the suitcase.", vietnameseExample: "Tôi bỏ quần áo vào vali." },
+                { english: "camera", vietnamese: "máy ảnh", englishExample: "I take photos with my camera.", vietnameseExample: "Tôi chụp ảnh bằng máy ảnh." }
+            ]
+        },
+        {
+            title: "Feelings 3 – Cảm xúc mở rộng",
+            words: [
+                { english: "nervous", vietnamese: "lo lắng", englishExample: "I feel nervous before the test.", vietnameseExample: "Tôi thấy lo lắng trước bài kiểm tra." },
+                { english: "brave", vietnamese: "dũng cảm", englishExample: "The firefighter is brave.", vietnameseExample: "Người lính cứu hỏa rất dũng cảm." },
+                { english: "quiet", vietnamese: "im lặng", englishExample: "Be quiet in class.", vietnameseExample: "Hãy im lặng trong lớp." },
+                { english: "noisy", vietnamese: "ồn ào", englishExample: "The market is noisy.", vietnameseExample: "Cái chợ rất ồn ào." },
+                { english: "lazy", vietnamese: "lười biếng", englishExample: "Don't be lazy!", vietnameseExample: "Đừng lười biếng!" },
+                { english: "clever", vietnamese: "thông minh", englishExample: "My sister is clever.", vietnameseExample: "Em gái tôi thông minh." },
+                { english: "funny", vietnamese: "vui nhộn", englishExample: "The clown is funny.", vietnameseExample: "Chú hề thật vui nhộn." },
+                { english: "shy", vietnamese: "ngại ngùng", englishExample: "The boy is shy.", vietnameseExample: "Cậu bé ngại ngùng." },
+                { english: "calm", vietnamese: "điềm tĩnh", englishExample: "She is calm and kind.", vietnameseExample: "Cô ấy điềm tĩnh và tốt bụng." },
+                { english: "serious", vietnamese: "nghiêm túc", englishExample: "He looks serious.", vietnameseExample: "Cậu ấy trông nghiêm túc." }
+            ]
+        },
+        {
+            title: "Body & Health 2 – Cơ thể & sức khỏe mở rộng",
+            words: [
+                { english: "tooth", vietnamese: "răng", englishExample: "I brush my teeth twice a day.", vietnameseExample: "Tôi đánh răng hai lần mỗi ngày." },
+                { english: "arm", vietnamese: "cánh tay", englishExample: "Raise your arm, please.", vietnameseExample: "Làm ơn giơ tay lên." },
+                { english: "hand", vietnamese: "bàn tay", englishExample: "Wash your hands, please.", vietnameseExample: "Rửa tay nhé." },
+                { english: "leg", vietnamese: "chân", englishExample: "My leg hurts.", vietnameseExample: "Chân tôi bị đau." },
+                { english: "knee", vietnamese: "đầu gối", englishExample: "I hurt my knee.", vietnameseExample: "Tôi bị đau đầu gối." },
+                { english: "foot", vietnamese: "bàn chân", englishExample: "My foot is small.", vietnameseExample: "Bàn chân tôi nhỏ." },
+                { english: "doctor", vietnamese: "Bác sĩ", englishExample: "The doctor helps sick people.", vietnameseExample: "Bác sĩ giúp người bệnh." },
+                { english: "hospital", vietnamese: "bệnh viện", englishExample: "She works in a hospital.", vietnameseExample: "Cô ấy làm việc trong bệnh viện." },
+                { english: "medicine", vietnamese: "thuốc", englishExample: "I take medicine when I'm sick.", vietnameseExample: "Tôi uống thuốc khi bị ốm." },
+                { english: "exercise", vietnamese: "tập thể dục", englishExample: "I do morning exercise every day.", vietnameseExample: "Tôi tập thể dục buổi sáng hằng ngày." }
+            ]
+        },
+        {
+            title: "Nature 2 – Thiên nhiên mở rộng",
+            words: [
+                { english: "river", vietnamese: "Dòng sông", englishExample: "The river is long and clean.", vietnameseExample: "Dòng sông dài và sạch." },
+                { english: "sea", vietnamese: "Biển", englishExample: "The sea is blue.", vietnameseExample: "Biển có màu xanh." },
+                { english: "forest", vietnamese: "Khu rừng", englishExample: "The forest is very green.", vietnameseExample: "Khu rừng rất xanh." },
+                { english: "flower", vietnamese: "Bông hoa", englishExample: "The flower smells nice.", vietnameseExample: "Bông hoa thơm." },
+                { english: "grass", vietnamese: "Cỏ", englishExample: "The grass is soft.", vietnameseExample: "Cỏ mềm mại." },
+                { english: "rock", vietnamese: "đá", englishExample: "There are rocks on the mountain.", vietnameseExample: "Có đá trên núi." },
+                { english: "tree", vietnamese: "Cái cây", englishExample: "The tree is tall.", vietnameseExample: "Cái cây cao." },
+                { english: "leaf", vietnamese: "Chiếc lá", englishExample: "The leaf is green.", vietnameseExample: "Chiếc lá màu xanh." },
+                { english: "cloud", vietnamese: "đám mây", englishExample: "There are white clouds in the sky.", vietnameseExample: "Có những đám mây trắng trên trời." },
+                { english: "sky", vietnamese: "Bầu trời", englishExample: "The sky is clear today.", vietnameseExample: "Bầu trời hôm nay trong xanh." }
+            ]
+        },
+        {
+            title: "Review – Common Phrases & Expressions",
+            words: [
+                { english: "How are you?", vietnamese: "Bạn khỏe không?", englishExample: "How are you today?", vietnameseExample: "Hôm nay bạn thế nào?" },
+                { english: "What's your name?", vietnamese: "Tên bạn là gì?", englishExample: "What's your name?", vietnameseExample: "Tên bạn là gì?" },
+                { english: "Where are you from?", vietnamese: "Bạn từ đâu tới?", englishExample: "I'm from Vietnam.", vietnameseExample: "Tôi đến từ Việt Nam." },
+                { english: "How old are you?", vietnamese: "Bạn bao nhiêu tuổi?", englishExample: "I'm ten years old.", vietnameseExample: "Tôi 10 tuổi." },
+                { english: "What do you like?", vietnamese: "Bạn thích gì?", englishExample: "I like reading books.", vietnameseExample: "Tôi thích đọc sách." },
+                { english: "What time is it?", vietnamese: "Mấy giờ rồi?", englishExample: "It's eight o'clock.", vietnameseExample: "Bây giờ là tám giờ." },
+                { english: "What's the weather like?", vietnamese: "Thời tiết thế nào?", englishExample: "It's sunny today.", vietnameseExample: "Hôm nay trời nắng." },
+                { english: "Let's go!", vietnamese: "Đi thôi!", englishExample: "Let's go to school!", vietnameseExample: "Đi thôi, đến trường nào!" },
+                { english: "See you later!", vietnamese: "Gặp lại sau nhé!", englishExample: "See you later, friends!", vietnameseExample: "Gặp lại sau nhé, các bạn!" },
+                { english: "Thank you very much!", vietnamese: "Cảm ơn rất nhiều!", englishExample: "Thank you very much, teacher!", vietnameseExample: "Cảm ơn cô rất nhiều!" }
+            ]
+        }
+      ];
+
+      // Components from components/
+      const SpeakerIcon = () => React.createElement(
+        "svg",
+        {
+          xmlns: "http://www.w3.org/2000/svg",
+          className: "h-8 w-8",
+          fill: "none",
+          viewBox: "0 0 24 24",
+          stroke: "currentColor"
+        },
+        React.createElement("path", {
+          strokeLinecap: "round",
+          strokeLinejoin: "round",
+          strokeWidth: 2,
+          d: "M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"
+        })
+      );
+
+      const TrophyIcon = () => React.createElement(
+        "svg",
+        {
+          xmlns: "http://www.w3.org/2000/svg",
+          className: "h-16 w-16",
+          viewBox: "0 0 20 20",
+          fill: "currentColor"
+        },
+        React.createElement("path", { d: "M17.92,3.39a1,1,0,0,0-1.33-.22L12,6.1,7.41,3.17a1,1,0,0,0-1.33.22L2.1,9.45a1,1,0,0,0,0,1.1l2.1,6.28a1,1,0,0,0,1,.67H14.8a1,1,0,0,0,1-.67l2.1-6.28a1,1,0,0,0,0-1.1ZM13,16H7L5.5,12,3,9.4,4.5,7.4l3,2.25a1,1,0,0,0,1,0l3-2.25L13,9.4,14.5,12Z" })
+      );
+
+      const WrongAnswersModal = ({ isOpen, onClose, mistakes }) => {
+        if (!isOpen) {
+          return null;
+        }
+
+        return React.createElement(
+          "div",
+          {
+            className: "fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50",
+            onClick: onClose
+          },
+          React.createElement(
+            "div",
+            {
+              className: "bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col",
+              onClick: (e) => e.stopPropagation()
+            },
+            React.createElement(
+              "div",
+              { className: "p-6 border-b border-gray-200 sticky top-0 bg-white" },
+              React.createElement("h2", { className: "text-2xl font-bold text-gray-800" }, "Words to Review"),
+              React.createElement("p", { className: "text-gray-500" }, "Here are the words you had trouble with.")
+            ),
+            React.createElement(
+              "div",
+              { className: "p-6 overflow-y-auto" },
+              mistakes.length === 0
+                ? React.createElement("p", { className: "text-center text-gray-500 py-8" }, "No mistakes yet. Great job!")
+                : React.createElement(
+                    "ul",
+                    { className: "divide-y divide-gray-200" },
+                    mistakes.map((mistake, index) =>
+                      React.createElement(
+                        "li",
+                        {
+                          key: index,
+                          className: "py-4 flex flex-col items-start select-none",
+                          onContextMenu: (e) => e.preventDefault()
+                        },
+                        React.createElement(
+                          "div",
+                          { className: "flex justify-between items-center w-full" },
+                          React.createElement("span", { className: "text-lg text-gray-800 font-medium" }, mistake.word.english),
+                          React.createElement("span", { className: "text-gray-600" }, mistake.word.vietnamese)
+                        ),
+                        mistake.sentenceErrorCount > 0 &&
+                          React.createElement("p", { className: "text-sm font-semibold text-red-600 mt-1" }, `Sentence mistakes: ${mistake.sentenceErrorCount}`),
+                        mistake.word.englishExample &&
+                          React.createElement("p", { className: "text-xl text-gray-500 mt-1 italic" }, `e.g., "${mistake.word.englishExample}"`)
+                      )
+                    )
+                  )
+            ),
+            React.createElement(
+              "div",
+              { className: "p-6 border-t border-gray-200 sticky bottom-0 bg-white" },
+              React.createElement(
+                "button",
+                {
+                  onClick: onClose,
+                  className: "w-full p-3 bg-sky-500 text-white font-bold rounded-lg hover:bg-sky-600 transition-colors"
+                },
+                "Close"
+              )
+            )
+          )
+        );
+      };
+      
+      const GameSummary = ({ score, total, onShowWrongAnswers, onNextTopic, onReturnToMenu }) => {
+        return React.createElement(
+          "div",
+          { className: "flex flex-col items-center justify-center min-h-screen p-4" },
+          React.createElement(
+            "div",
+            { className: "w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 text-center border border-gray-200" },
+            React.createElement(
+              "div", { className: "flex justify-center text-sky-400 mb-4" },
+              React.createElement(TrophyIcon)
+            ),
+            React.createElement("h1", { className: "text-3xl font-bold text-sky-600 mb-2" }, "Topic Complete!"),
+            React.createElement("p", { className: "text-gray-600 mb-6" }, "Great job! Here's how you did."),
+            React.createElement(
+              "div", { className: "my-8" },
+              React.createElement("p", { className: "text-lg text-gray-800" }, "Your Score"),
+              React.createElement("p", { className: "text-6xl font-bold text-green-500" }, score, React.createElement("span", { className: "text-3xl text-gray-500" }, `/${total}`))
+            ),
+            React.createElement(
+              "div", { className: "space-y-3" },
+              React.createElement("button", { onClick: onNextTopic, className: "w-full p-4 bg-sky-500 text-white font-bold rounded-lg hover:bg-sky-600 transition-transform hover:scale-105 transform duration-200" }, "Continue to Next Topic"),
+              React.createElement("button", { onClick: onShowWrongAnswers, className: "w-full p-4 bg-gray-200 text-gray-800 font-bold rounded-lg hover:bg-gray-300 transition-transform hover:scale-105 transform duration-200" }, "Review Mistakes"),
+              React.createElement("button", { onClick: onReturnToMenu, className: "w-full p-3 bg-transparent text-gray-600 font-bold rounded-lg hover:bg-gray-100 transition-colors" }, "Back to Main Menu")
+            )
+          )
+        );
+      };
+
+      const Game = ({ topic, onReturnToMenu, onNextTopic }) => {
+        const words = useMemo(() => [...topic.words].sort(() => 0.5 - Math.random()), [topic]);
+        
+        const [currentWordIndex, setCurrentWordIndex] = useState(0);
+        const [userInput, setUserInput] = useState('');
+        const [score, setScore] = useState(0);
+        const [attempts, setAttempts] = useState(1);
+        const [wrongAnswers, setWrongAnswers] = useState([]);
+        const [isFinished, setIsFinished] = useState(false);
+        const [showHint, setShowHint] = useState(false);
+        const [isHintVisible, setIsHintVisible] = useState(false);
+        const [showWrongAnswersModal, setShowWrongAnswersModal] = useState(false);
+        const [feedback, setFeedback] = useState(null);
+        const [gameStage, setGameStage] = useState('word');
+        const inputRef = useRef(null);
+        const currentWord = words[currentWordIndex];
+
+        const speak = useCallback((text, onEndCallback = null) => {
+          if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            if (onEndCallback && typeof onEndCallback === 'function') {
+              utterance.onend = onEndCallback;
+            }
+            window.speechSynthesis.speak(utterance);
+          } else if (onEndCallback && typeof onEndCallback === 'function') {
+            onEndCallback();
+          }
+        }, []);
+
+        useEffect(() => {
+          let timeoutId = null;
+          if (currentWord) {
+            if (gameStage === 'word') {
+              speak(currentWord.english);
+            } else if (gameStage === 'sentence' && currentWord.englishExample) {
+              const playAgain = () => {
+                timeoutId = setTimeout(() => speak(currentWord.englishExample), 300);
+              };
+              speak(currentWord.englishExample, playAgain);
+            }
+            if (inputRef.current) {
+              inputRef.current.focus();
+            }
+          }
+
+          return () => {
+            if (timeoutId) {
+              clearTimeout(timeoutId);
+            }
+            if ('speechSynthesis' in window) {
+              window.speechSynthesis.cancel();
+            }
+          };
+        }, [currentWord, gameStage, speak]);
+
+        useEffect(() => {
+            if (feedback) {
+                const timer = setTimeout(() => setFeedback(null), 2500);
+                return () => clearTimeout(timer);
+            }
+        }, [feedback]);
+
+        const normalizeSentence = (str) => str.trim().toLowerCase().replace(/[.,!?]/g, '');
+
+        const handleNextWord = useCallback(() => {
+          if (currentWordIndex < words.length - 1) {
+            setCurrentWordIndex(prev => prev + 1);
+            setUserInput('');
+            setAttempts(1);
+            setShowHint(false);
+            setFeedback(null);
+            setGameStage('word');
+          } else {
+            setIsFinished(true);
+          }
+        }, [currentWordIndex, words.length]);
+        
+        const handleTransitionToSentence = useCallback(() => {
+          if (currentWord.englishExample) {
+              setGameStage('sentence');
+              setUserInput('');
+              setFeedback(null);
+              setAttempts(1);
+              setShowHint(false);
+          } else {
+              handleNextWord();
+          }
+        }, [currentWord, handleNextWord]);
+
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          if (!userInput.trim() || feedback) return;
+
+          if (gameStage === 'word') {
+              const isCorrect = userInput.trim().toLowerCase() === currentWord.english.toLowerCase();
+              if (isCorrect) {
+                setFeedback({type: 'correct', message: 'Correct!', example: currentWord.englishExample});
+                if (attempts === 1) {
+                  setScore(prev => prev + 1);
+                }
+                setTimeout(handleTransitionToSentence, 2500);
+              } else {
+                setFeedback({type: 'incorrect', message: 'Incorrect, try again!'});
+                if (attempts === 1) {
+                    setWrongAnswers(prev => {
+                        if (!prev.some(m => m.word.english === currentWord.english)) {
+                            return [...prev, { word: currentWord, sentenceErrorCount: 0 }];
+                        }
+                        return prev;
+                    });
+                }
+                setAttempts(prev => prev + 1);
+                if (attempts >= 1) {
+                  setShowHint(true);
+                }
+              }
+          } else { // gameStage === 'sentence'
+              if (!currentWord.englishExample) return;
+              
+              const isCorrect = normalizeSentence(userInput) === normalizeSentence(currentWord.englishExample);
+              if (isCorrect) {
+                  setFeedback({ type: 'correct', message: 'Excellent!' });
+                  setTimeout(handleNextWord, 1000);
+              } else {
+                  setFeedback({ type: 'incorrect', message: 'Not quite, listen again!' });
+                  setAttempts(prev => prev + 1);
+                  if (attempts >= 1) {
+                    setShowHint(true);
+                  }
+                  setWrongAnswers(prev => {
+                      const existingMistakeIndex = prev.findIndex(m => m.word.english === currentWord.english);
+                      if (existingMistakeIndex > -1) {
+                          const updatedMistakes = [...prev];
+                          updatedMistakes[existingMistakeIndex].sentenceErrorCount += 1;
+                          return updatedMistakes;
+                      } else {
+                          return [...prev, { word: currentWord, sentenceErrorCount: 1 }];
+                      }
+                  });
+              }
+          }
+        };
+
+        if (isFinished) {
+          return React.createElement(GameSummary, { score, total: words.length, onShowWrongAnswers: () => setShowWrongAnswersModal(true), onNextTopic, onReturnToMenu });
+        }
+
+        if (!currentWord) {
+          return React.createElement("div", { className: "text-center p-8" }, "Loading topic...");
+        }
+        
+        const getInputBorderColor = () => {
+            if (!feedback) return 'border-gray-300 focus:border-sky-500';
+            return feedback.type === 'correct' ? 'border-green-500 animate-pulse' : 'border-red-500 animate-pulse';
+        }
+
+        const progressPercentage = ((currentWordIndex) / words.length) * 100;
+
+        return React.createElement(
+          "div", { className: "flex flex-col items-center justify-center min-h-screen p-4" },
+          React.createElement(
+            "div", { className: "w-full max-w-xl bg-white rounded-2xl shadow-2xl p-6 md:p-8 relative overflow-hidden border border-gray-200" },
+            React.createElement("div", { className: "w-full bg-gray-200 rounded-full h-2.5 absolute top-0 left-0" },
+              React.createElement("div", { className: "bg-sky-400 h-2.5 rounded-full", style: { width: `${progressPercentage}%`, transition: 'width 0.5s ease-in-out' } })
+            ),
+            React.createElement("div", { className: "absolute top-4 left-4" },
+              React.createElement("button", { onClick: onReturnToMenu, className: "text-gray-500 hover:text-sky-600 transition-colors text-sm" }, "← Change Topic")
+            ),
+            React.createElement("div", { className: "absolute top-4 right-4" },
+              React.createElement("button", { onClick: () => setShowWrongAnswersModal(true), className: "text-gray-500 hover:text-sky-600 transition-colors text-sm" }, `Mistakes (${wrongAnswers.length})`)
+            ),
+            React.createElement("div", { className: "text-center mt-12" },
+              React.createElement("h2", { className: "text-2xl font-bold text-sky-600 mb-2" }, topic.title),
+              React.createElement("p", { className: "text-gray-500" }, `Word ${currentWordIndex + 1} of ${words.length} • Score: ${score}`)
+            ),
+            React.createElement("div", { className: "my-8 text-center min-h-[160px] flex flex-col justify-center items-center select-none", onContextMenu: (e) => e.preventDefault() },
+              gameStage === 'word'
+                ? React.createElement(React.Fragment, null,
+                    React.createElement("p", { className: "text-4xl md:text-5xl font-semibold text-gray-900 mb-2" }, currentWord.vietnamese),
+                    currentWord.vietnameseExample && React.createElement("p", { className: "text-xl text-gray-500 mt-2 italic" }, `"${currentWord.vietnameseExample}"`)
+                  )
+                : React.createElement(React.Fragment, null,
+                    React.createElement("p", { className: "text-2xl font-semibold text-gray-800 mb-2" }, "Listen and type the sentence:"),
+                    currentWord.vietnameseExample && React.createElement("p", { className: "text-2xl text-gray-700 mb-2 italic" }, `"${currentWord.vietnameseExample}"`),
+                    React.createElement("p", { className: "text-lg text-gray-500" }, `(${currentWord.english} - ${currentWord.vietnamese})`)
+                  ),
+              React.createElement("button", { onClick: () => speak(gameStage === 'word' ? currentWord.english : (currentWord.englishExample || '')), className: "text-gray-500 hover:text-sky-500 transition-colors p-2 rounded-full active:scale-90 transform mt-2" },
+                React.createElement(SpeakerIcon)
+              )
+            ),
+            React.createElement("form", { onSubmit: handleSubmit, className: "space-y-4" },
+              React.createElement("input", {
+                ref: inputRef,
+                type: "text",
+                value: userInput,
+                onChange: (e) => setUserInput(e.target.value),
+                placeholder: gameStage === 'word' ? "Type the English word..." : "Type the English sentence...",
+                className: `w-full p-4 text-center text-lg bg-gray-100 border-2 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all duration-200 ${getInputBorderColor()}`,
+                autoCapitalize: "none",
+                autoComplete: "off",
+                autoCorrect: "off"
+              }),
+              React.createElement("button", { type: "submit", className: "w-full p-4 bg-sky-500 text-white font-bold rounded-lg hover:bg-sky-600 transition-transform hover:scale-105 transform duration-200 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:scale-100" }, "Submit")
+            ),
+            React.createElement("div", { className: "mt-4 min-h-[48px] flex items-center justify-center" },
+              showHint && !feedback && React.createElement("div", { className: "relative" },
+                React.createElement("button", {
+                  onMouseDown: () => setIsHintVisible(true),
+                  onMouseUp: () => setIsHintVisible(false),
+                  onTouchStart: () => setIsHintVisible(true),
+                  onTouchEnd: () => setIsHintVisible(false),
+                  className: "px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors"
+                }, "Hold for Hint"),
+                isHintVisible && React.createElement("div", { className: "absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white p-3 rounded-lg border border-gray-300 shadow-lg z-10 select-none" },
+                  React.createElement("p", { className: "text-sky-700 font-mono whitespace-nowrap" }, gameStage === 'word' ? currentWord.english : currentWord.englishExample)
+                )
+              ),
+              feedback && React.createElement(
+                "div", 
+                { className: "text-center" },
+                React.createElement("p", { className: `text-lg font-semibold ${feedback.type === 'correct' ? 'text-green-500' : 'text-red-500'}` }, feedback.message),
+                feedback.example && React.createElement("p", { className: "text-lg text-gray-500 mt-1 italic" }, `e.g., "${feedback.example}"`)
+              )
+            )
+          ),
+          React.createElement(WrongAnswersModal, { isOpen: showWrongAnswersModal, onClose: () => setShowWrongAnswersModal(false), mistakes: wrongAnswers })
+        );
+      };
+
+      // App component and its sub-components
+      const WelcomeScreen = ({ onNameSubmit }) => {
+          const [name, setName] = useState('');
+
+          const handleSubmit = (e) => {
+              e.preventDefault();
+              if (name.trim()) {
+                  onNameSubmit(name.trim());
+              }
+          };
+
+          return React.createElement(
+              "div",
+              { className: "flex flex-col items-center justify-center min-h-screen p-4 text-center" },
+              React.createElement(
+                  "div",
+                  { className: "w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 border border-gray-200" },
+                  React.createElement("h1", { className: "text-4xl font-bold text-sky-600 mb-2" }, "Vocabulary Challenge"),
+                  React.createElement("p", { className: "text-gray-600 mb-8" }, "Enter your name to start learning!"),
+                  React.createElement(
+                      "form",
+                      { onSubmit: handleSubmit, className: "flex flex-col gap-4" },
+                      React.createElement("input", {
+                          type: "text",
+                          value: name,
+                          onChange: (e) => setName(e.target.value),
+                          placeholder: "Your Name",
+                          className: "w-full p-4 text-center text-lg bg-gray-100 border-2 border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all duration-200",
+                          maxLength: 20
+                      }),
+                      React.createElement(
+                          "button",
+                          {
+                              type: "submit",
+                              disabled: !name.trim(),
+                              className: "w-full p-4 bg-sky-500 text-white font-bold rounded-lg hover:bg-sky-600 transition-transform hover:scale-105 transform duration-200 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed disabled:scale-100"
+                          },
+                          "Start Learning"
+                      )
+                  )
+              )
+          );
+      };
+
+      const topicColors = [
+        'bg-rose-100 border-rose-300 hover:bg-rose-200 text-rose-800 focus:ring-rose-500',
+        'bg-blue-100 border-blue-300 hover:bg-blue-200 text-blue-800 focus:ring-blue-500',
+        'bg-cyan-100 border-cyan-300 hover:bg-cyan-200 text-cyan-800 focus:ring-cyan-500',
+        'bg-amber-100 border-amber-300 hover:bg-amber-200 text-amber-800 focus:ring-amber-500',
+        'bg-violet-100 border-violet-300 hover:bg-violet-200 text-violet-800 focus:ring-violet-500',
+        'bg-fuchsia-100 border-fuchsia-300 hover:bg-fuchsia-200 text-fuchsia-800 focus:ring-fuchsia-500',
+        'bg-emerald-100 border-emerald-300 hover:bg-emerald-200 text-emerald-800 focus:ring-emerald-500',
+        'bg-sky-100 border-sky-300 hover:bg-sky-200 text-sky-800 focus:ring-sky-500',
+        'bg-lime-100 border-lime-300 hover:bg-lime-200 text-lime-800 focus:ring-lime-500',
+        'bg-orange-100 border-orange-300 hover:bg-orange-200 text-orange-800 focus:ring-orange-500',
+        'bg-teal-100 border-teal-300 hover:bg-teal-200 text-teal-800 focus:ring-teal-500',
+        'bg-indigo-100 border-indigo-300 hover:bg-indigo-200 text-indigo-800 focus:ring-indigo-500',
+        'bg-pink-100 border-pink-300 hover:bg-pink-200 text-pink-800 focus:ring-pink-500',
+        'bg-yellow-100 border-yellow-300 hover:bg-yellow-200 text-yellow-800 focus:ring-yellow-500',
+        'bg-green-100 border-green-300 hover:bg-green-200 text-green-800 focus:ring-green-500',
+      ];
+
+      const TopicSelector = ({ playerName, onSelectTopic }) => {
+        return React.createElement(
+          "div", { className: "flex flex-col items-center min-h-screen p-4" },
+          React.createElement(
+            "div", { className: "w-full max-w-6xl text-center py-8" },
+            React.createElement("h1", { className: "text-3xl md:text-4xl font-bold text-gray-800 mb-2" }, `Welcome, ${playerName}!`),
+            React.createElement("p", { className: "text-lg text-gray-600 mb-8" }, "Choose a topic to begin your challenge."),
+            React.createElement("div", { className: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4" },
+              vocabularyData.map((topic, index) =>
+                React.createElement(
+                  "button",
+                  {
+                    key: index,
+                    onClick: () => onSelectTopic(topic),
+                    className: `p-4 rounded-lg shadow-md border hover:scale-105 transform transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-opacity-75 ${topicColors[index % topicColors.length]}`
+                  },
+                  React.createElement("h2", { className: "text-lg font-semibold" }, topic.title),
+                  React.createElement("p", { className: "mt-1 opacity-80" }, `${topic.words.length} words`)
+                )
+              )
+            )
+          )
+        );
+      };
+
+      const App = () => {
+        const [playerName, setPlayerName] = useState('');
+        const [currentTopic, setCurrentTopic] = useState(null);
+        const [topicIndex, setTopicIndex] = useState(null);
+
+        const handleNameSubmit = useCallback((name) => {
+          setPlayerName(name);
+        }, []);
+
+        const handleSelectTopic = useCallback((topic) => {
+          const index = vocabularyData.findIndex(t => t.title === topic.title);
+          setCurrentTopic(topic);
+          setTopicIndex(index);
+        }, []);
+        
+        const handleReturnToMenu = useCallback(() => {
+            setCurrentTopic(null);
+            setTopicIndex(null);
+        }, []);
+
+        const handleNextTopic = useCallback(() => {
+          if (topicIndex !== null && topicIndex < vocabularyData.length - 1) {
+              const nextIndex = topicIndex + 1;
+              setCurrentTopic(vocabularyData[nextIndex]);
+              setTopicIndex(nextIndex);
+          } else {
+              handleReturnToMenu();
+          }
+        }, [topicIndex, handleReturnToMenu]);
+
+        if (!playerName) {
+          return React.createElement(WelcomeScreen, { onNameSubmit: handleNameSubmit });
+        }
+
+        if (!currentTopic) {
+          return React.createElement(TopicSelector, { playerName, onSelectTopic: handleSelectTopic });
+        }
+
+        return React.createElement(Game, { 
+            topic: currentTopic, 
+            onReturnToMenu: handleReturnToMenu, 
+            onNextTopic: handleNextTopic 
+        });
+      };
+
+      // Entry point from index.tsx
+      const rootElement = document.getElementById('root');
+      if (!rootElement) {
+        throw new Error("Could not find root element to mount to");
+      }
+
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(React.createElement(App));
+    </script>
+  </body>
+</html>
